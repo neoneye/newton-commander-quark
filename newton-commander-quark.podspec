@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "newton-commander-quark"
-  s.version      = "0.1.1"
+  s.version      = "0.1.2"
   s.summary      = "Shared low-level code used across Newton Commander's submodules."
   s.description  = <<-DESC
       A quark is an elementary particle and a fundamental constituent of matter.
@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
 
   s.ios.exclude_files = 'Classes/osx'
   s.osx.exclude_files = 'Classes/ios', 'Classes/osx/*Test.*'
-  # s.public_header_files = 'Classes/**/*.h'
+  s.public_header_files = 'Classes/**/*.h'
   # s.frameworks = 'SomeFramework', 'AnotherFramework'
   # s.dependency 'JSONKit', '~> 1.4'
 end
