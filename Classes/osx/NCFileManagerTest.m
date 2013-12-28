@@ -6,8 +6,8 @@
 //  Copyright 2010 opcoders.com. All rights reserved.
 //
 
-#import "NSFileManager+ResolvePathTest.h"
-#import <NCCore/NSFileManager+ResolvePath.h>
+#import "NCFileManagerTest.h"
+#import <NCFileManager.h>
 
 
 @implementation NSFileManager_ResolvePathTest

@@ -7,7 +7,7 @@
 //
 
 #import "NCDirEnumeratorTest.h"
-#import <NCCore/NCDirEnumerator.h>
+#import <NCDirEnumerator.h>
 
 @implementation NCDirEnumeratorTest
 

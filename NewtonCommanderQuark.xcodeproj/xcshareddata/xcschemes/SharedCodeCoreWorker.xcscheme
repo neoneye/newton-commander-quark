@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D2AAC07D0554694100DB518D"
-               BuildableName = "libSharedCodeCoreWorker.a"
+               BuildableName = "libNewtonCommanderQuark.a"
                BlueprintName = "NewtonCommanderQuark"
                ReferencedContainer = "container:NewtonCommanderQuark.xcodeproj">
             </BuildableReference>
@@ -28,6 +28,16 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "42120DB5186F17C800191CFC"
+               BuildableName = "OldTests.octest"
+               BlueprintName = "OldTests"
+               ReferencedContainer = "container:NewtonCommanderQuark.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
