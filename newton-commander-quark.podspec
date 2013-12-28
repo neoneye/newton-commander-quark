@@ -14,11 +14,11 @@ Pod::Spec.new do |s|
                     * Markdown format.
                     * Don't worry about the indent, we strip it!
                    DESC
-  s.homepage     = "http://EXAMPLE/NAME"
+  s.homepage     = "https://github.com/neoneye/newton-commander-quark"
   s.screenshots  = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license      = 'MIT'
-  s.author       = { "Simon Strandgaard" => "neoneye@gmail.com" }
-  s.source       = { :git => "http://EXAMPLE/NAME.git", :tag => s.version.to_s }
+  s.author       = { "Simon Strandgaard" => "simon@opcoders.com" }
+  s.source       = { :git => "https://github.com/neoneye/newton-commander-quark.git", :tag => s.version.to_s }
 
   # s.platform     = :ios, '5.0'
   # s.ios.deployment_target = '5.0'
