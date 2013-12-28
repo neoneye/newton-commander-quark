@@ -1,0 +1,341 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		421079D711F11407001372D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 421079D611F11407001372D8 /* Foundation.framework */; };
+		427B5048186F140C009D8F64 /* FPOCsvWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 427B5027186F140C009D8F64 /* FPOCsvWriter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		427B5049186F140C009D8F64 /* FPOCsvWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 427B5028186F140C009D8F64 /* FPOCsvWriter.m */; };
+		427B504A186F140C009D8F64 /* FPOICsvWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 427B5029186F140C009D8F64 /* FPOICsvWriter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		427B504B186F140C009D8F64 /* NCDirEnumerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 427B502A186F140C009D8F64 /* NCDirEnumerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		427B504C186F140C009D8F64 /* NCDirEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 427B502B186F140C009D8F64 /* NCDirEnumerator.m */; };
+		427B504F186F140C009D8F64 /* NCFileEventManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 427B502E186F140C009D8F64 /* NCFileEventManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		427B5050186F140C009D8F64 /* NCFileEventManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 427B502F186F140C009D8F64 /* NCFileEventManager.m */; };
+		427B5051186F140C009D8F64 /* NCFileItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 427B5030186F140C009D8F64 /* NCFileItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		427B5052186F140C009D8F64 /* NCFileItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 427B5031186F140C009D8F64 /* NCFileItem.m */; };
+		427B5053186F140C009D8F64 /* NCFileManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 427B5032186F140C009D8F64 /* NCFileManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		427B5054186F140C009D8F64 /* NCFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 427B5033186F140C009D8F64 /* NCFileManager.m */; };
+		427B5057186F140C009D8F64 /* NCLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 427B5036186F140C009D8F64 /* NCLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		427B5058186F140C009D8F64 /* NCLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 427B5037186F140C009D8F64 /* NCLog.m */; };
+		427B5059186F140C009D8F64 /* NCTimeProfiler.h in Headers */ = {isa = PBXBuildFile; fileRef = 427B5038186F140C009D8F64 /* NCTimeProfiler.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		427B505A186F140C009D8F64 /* NCTimeProfiler.m in Sources */ = {isa = PBXBuildFile; fileRef = 427B5039186F140C009D8F64 /* NCTimeProfiler.m */; };
+		427B505B186F140C009D8F64 /* sc_finder_info_manager.h in Headers */ = {isa = PBXBuildFile; fileRef = 427B503A186F140C009D8F64 /* sc_finder_info_manager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		427B505C186F140C009D8F64 /* sc_finder_info_manager.m in Sources */ = {isa = PBXBuildFile; fileRef = 427B503B186F140C009D8F64 /* sc_finder_info_manager.m */; };
+		427B505D186F140C009D8F64 /* sc_resource_fork_manager.h in Headers */ = {isa = PBXBuildFile; fileRef = 427B503C186F140C009D8F64 /* sc_resource_fork_manager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		427B505E186F140C009D8F64 /* sc_resource_fork_manager.m in Sources */ = {isa = PBXBuildFile; fileRef = 427B503D186F140C009D8F64 /* sc_resource_fork_manager.m */; };
+		427B505F186F140C009D8F64 /* sc_scanner.h in Headers */ = {isa = PBXBuildFile; fileRef = 427B503E186F140C009D8F64 /* sc_scanner.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		427B5060186F140C009D8F64 /* sc_scanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 427B503F186F140C009D8F64 /* sc_scanner.m */; };
+		427B5061186F140C009D8F64 /* sc_tov_copier.h in Headers */ = {isa = PBXBuildFile; fileRef = 427B5040186F140C009D8F64 /* sc_tov_copier.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		427B5062186F140C009D8F64 /* sc_tov_copier.m in Sources */ = {isa = PBXBuildFile; fileRef = 427B5041186F140C009D8F64 /* sc_tov_copier.m */; };
+		427B5063186F140C009D8F64 /* sc_tov_print.h in Headers */ = {isa = PBXBuildFile; fileRef = 427B5042186F140C009D8F64 /* sc_tov_print.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		427B5064186F140C009D8F64 /* sc_tov_print.m in Sources */ = {isa = PBXBuildFile; fileRef = 427B5043186F140C009D8F64 /* sc_tov_print.m */; };
+		427B5065186F140C009D8F64 /* sc_transfer.h in Headers */ = {isa = PBXBuildFile; fileRef = 427B5044186F140C009D8F64 /* sc_transfer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		427B5066186F140C009D8F64 /* sc_transfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 427B5045186F140C009D8F64 /* sc_transfer.m */; };
+		427B5067186F140C009D8F64 /* sc_traversal_objects.h in Headers */ = {isa = PBXBuildFile; fileRef = 427B5046186F140C009D8F64 /* sc_traversal_objects.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		427B5068186F140C009D8F64 /* sc_traversal_objects.m in Sources */ = {isa = PBXBuildFile; fileRef = 427B5047186F140C009D8F64 /* sc_traversal_objects.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		421079D611F11407001372D8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		427B5027186F140C009D8F64 /* FPOCsvWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPOCsvWriter.h; sourceTree = "<group>"; };
+		427B5028186F140C009D8F64 /* FPOCsvWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FPOCsvWriter.m; sourceTree = "<group>"; };
+		427B5029186F140C009D8F64 /* FPOICsvWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPOICsvWriter.h; sourceTree = "<group>"; };
+		427B502A186F140C009D8F64 /* NCDirEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCDirEnumerator.h; sourceTree = "<group>"; };
+		427B502B186F140C009D8F64 /* NCDirEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCDirEnumerator.m; sourceTree = "<group>"; };
+		427B502C186F140C009D8F64 /* NCDirEnumeratorTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCDirEnumeratorTest.h; sourceTree = "<group>"; };
+		427B502D186F140C009D8F64 /* NCDirEnumeratorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCDirEnumeratorTest.m; sourceTree = "<group>"; };
+		427B502E186F140C009D8F64 /* NCFileEventManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCFileEventManager.h; sourceTree = "<group>"; };
+		427B502F186F140C009D8F64 /* NCFileEventManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCFileEventManager.m; sourceTree = "<group>"; };
+		427B5030186F140C009D8F64 /* NCFileItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCFileItem.h; sourceTree = "<group>"; };
+		427B5031186F140C009D8F64 /* NCFileItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCFileItem.m; sourceTree = "<group>"; };
+		427B5032186F140C009D8F64 /* NCFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCFileManager.h; sourceTree = "<group>"; };
+		427B5033186F140C009D8F64 /* NCFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCFileManager.m; sourceTree = "<group>"; };
+		427B5034186F140C009D8F64 /* NCFileManagerTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCFileManagerTest.h; sourceTree = "<group>"; };
+		427B5035186F140C009D8F64 /* NCFileManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCFileManagerTest.m; sourceTree = "<group>"; };
+		427B5036186F140C009D8F64 /* NCLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCLog.h; sourceTree = "<group>"; };
+		427B5037186F140C009D8F64 /* NCLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCLog.m; sourceTree = "<group>"; };
+		427B5038186F140C009D8F64 /* NCTimeProfiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCTimeProfiler.h; sourceTree = "<group>"; };
+		427B5039186F140C009D8F64 /* NCTimeProfiler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCTimeProfiler.m; sourceTree = "<group>"; };
+		427B503A186F140C009D8F64 /* sc_finder_info_manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sc_finder_info_manager.h; sourceTree = "<group>"; };
+		427B503B186F140C009D8F64 /* sc_finder_info_manager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sc_finder_info_manager.m; sourceTree = "<group>"; };
+		427B503C186F140C009D8F64 /* sc_resource_fork_manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sc_resource_fork_manager.h; sourceTree = "<group>"; };
+		427B503D186F140C009D8F64 /* sc_resource_fork_manager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sc_resource_fork_manager.m; sourceTree = "<group>"; };
+		427B503E186F140C009D8F64 /* sc_scanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sc_scanner.h; sourceTree = "<group>"; };
+		427B503F186F140C009D8F64 /* sc_scanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sc_scanner.m; sourceTree = "<group>"; };
+		427B5040186F140C009D8F64 /* sc_tov_copier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sc_tov_copier.h; sourceTree = "<group>"; };
+		427B5041186F140C009D8F64 /* sc_tov_copier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sc_tov_copier.m; sourceTree = "<group>"; };
+		427B5042186F140C009D8F64 /* sc_tov_print.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sc_tov_print.h; sourceTree = "<group>"; };
+		427B5043186F140C009D8F64 /* sc_tov_print.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sc_tov_print.m; sourceTree = "<group>"; };
+		427B5044186F140C009D8F64 /* sc_transfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sc_transfer.h; sourceTree = "<group>"; };
+		427B5045186F140C009D8F64 /* sc_transfer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sc_transfer.m; sourceTree = "<group>"; };
+		427B5046186F140C009D8F64 /* sc_traversal_objects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sc_traversal_objects.h; sourceTree = "<group>"; };
+		427B5047186F140C009D8F64 /* sc_traversal_objects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sc_traversal_objects.m; sourceTree = "<group>"; };
+		42DD9BB7186F149800323A01 /* prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = prefix.pch; sourceTree = "<group>"; };
+		D2AAC07E0554694100DB518D /* libNewtonCommanderQuark.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libNewtonCommanderQuark.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D2AAC07C0554694100DB518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				421079D711F11407001372D8 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DFFF38A50411DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC07E0554694100DB518D /* libNewtonCommanderQuark.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* SharedCode Core+Worker */ = {
+			isa = PBXGroup;
+			children = (
+				08FB77AEFE84172EC02AAC07 /* Classes */,
+				0867D69AFE84028FC02AAC07 /* Frameworks */,
+				034768DFFF38A50411DB9C8B /* Products */,
+			);
+			name = "SharedCode Core+Worker";
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				421079D611F11407001372D8 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		08FB77AEFE84172EC02AAC07 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				427B5027186F140C009D8F64 /* FPOCsvWriter.h */,
+				427B5028186F140C009D8F64 /* FPOCsvWriter.m */,
+				427B5029186F140C009D8F64 /* FPOICsvWriter.h */,
+				427B502A186F140C009D8F64 /* NCDirEnumerator.h */,
+				427B502B186F140C009D8F64 /* NCDirEnumerator.m */,
+				427B502C186F140C009D8F64 /* NCDirEnumeratorTest.h */,
+				427B502D186F140C009D8F64 /* NCDirEnumeratorTest.m */,
+				427B502E186F140C009D8F64 /* NCFileEventManager.h */,
+				427B502F186F140C009D8F64 /* NCFileEventManager.m */,
+				427B5030186F140C009D8F64 /* NCFileItem.h */,
+				427B5031186F140C009D8F64 /* NCFileItem.m */,
+				427B5032186F140C009D8F64 /* NCFileManager.h */,
+				427B5033186F140C009D8F64 /* NCFileManager.m */,
+				427B5034186F140C009D8F64 /* NCFileManagerTest.h */,
+				427B5035186F140C009D8F64 /* NCFileManagerTest.m */,
+				427B5036186F140C009D8F64 /* NCLog.h */,
+				427B5037186F140C009D8F64 /* NCLog.m */,
+				427B5038186F140C009D8F64 /* NCTimeProfiler.h */,
+				427B5039186F140C009D8F64 /* NCTimeProfiler.m */,
+				42DD9BB7186F149800323A01 /* prefix.pch */,
+				427B503A186F140C009D8F64 /* sc_finder_info_manager.h */,
+				427B503B186F140C009D8F64 /* sc_finder_info_manager.m */,
+				427B503C186F140C009D8F64 /* sc_resource_fork_manager.h */,
+				427B503D186F140C009D8F64 /* sc_resource_fork_manager.m */,
+				427B503E186F140C009D8F64 /* sc_scanner.h */,
+				427B503F186F140C009D8F64 /* sc_scanner.m */,
+				427B5040186F140C009D8F64 /* sc_tov_copier.h */,
+				427B5041186F140C009D8F64 /* sc_tov_copier.m */,
+				427B5042186F140C009D8F64 /* sc_tov_print.h */,
+				427B5043186F140C009D8F64 /* sc_tov_print.m */,
+				427B5044186F140C009D8F64 /* sc_transfer.h */,
+				427B5045186F140C009D8F64 /* sc_transfer.m */,
+				427B5046186F140C009D8F64 /* sc_traversal_objects.h */,
+				427B5047186F140C009D8F64 /* sc_traversal_objects.m */,
+			);
+			name = Classes;
+			path = Classes/osx;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC07A0554694100DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				427B504A186F140C009D8F64 /* FPOICsvWriter.h in Headers */,
+				427B504F186F140C009D8F64 /* NCFileEventManager.h in Headers */,
+				427B504B186F140C009D8F64 /* NCDirEnumerator.h in Headers */,
+				427B5053186F140C009D8F64 /* NCFileManager.h in Headers */,
+				427B5059186F140C009D8F64 /* NCTimeProfiler.h in Headers */,
+				427B5067186F140C009D8F64 /* sc_traversal_objects.h in Headers */,
+				427B5057186F140C009D8F64 /* NCLog.h in Headers */,
+				427B505D186F140C009D8F64 /* sc_resource_fork_manager.h in Headers */,
+				427B5051186F140C009D8F64 /* NCFileItem.h in Headers */,
+				427B5061186F140C009D8F64 /* sc_tov_copier.h in Headers */,
+				427B505B186F140C009D8F64 /* sc_finder_info_manager.h in Headers */,
+				427B5048186F140C009D8F64 /* FPOCsvWriter.h in Headers */,
+				427B5065186F140C009D8F64 /* sc_transfer.h in Headers */,
+				427B505F186F140C009D8F64 /* sc_scanner.h in Headers */,
+				427B5063186F140C009D8F64 /* sc_tov_print.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC07D0554694100DB518D /* NewtonCommanderQuark */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "NewtonCommanderQuark" */;
+			buildPhases = (
+				D2AAC07A0554694100DB518D /* Headers */,
+				D2AAC07B0554694100DB518D /* Sources */,
+				D2AAC07C0554694100DB518D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NewtonCommanderQuark;
+			productName = "SharedCode Core+Worker";
+			productReference = D2AAC07E0554694100DB518D /* libNewtonCommanderQuark.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0500;
+			};
+			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "NewtonCommanderQuark" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 0867D691FE84028FC02AAC07 /* SharedCode Core+Worker */;
+			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC07D0554694100DB518D /* NewtonCommanderQuark */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC07B0554694100DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				427B5066186F140C009D8F64 /* sc_transfer.m in Sources */,
+				427B5068186F140C009D8F64 /* sc_traversal_objects.m in Sources */,
+				427B5062186F140C009D8F64 /* sc_tov_copier.m in Sources */,
+				427B5050186F140C009D8F64 /* NCFileEventManager.m in Sources */,
+				427B5054186F140C009D8F64 /* NCFileManager.m in Sources */,
+				427B505E186F140C009D8F64 /* sc_resource_fork_manager.m in Sources */,
+				427B5052186F140C009D8F64 /* NCFileItem.m in Sources */,
+				427B505A186F140C009D8F64 /* NCTimeProfiler.m in Sources */,
+				427B5058186F140C009D8F64 /* NCLog.m in Sources */,
+				427B504C186F140C009D8F64 /* NCDirEnumerator.m in Sources */,
+				427B5049186F140C009D8F64 /* FPOCsvWriter.m in Sources */,
+				427B5060186F140C009D8F64 /* sc_scanner.m in Sources */,
+				427B505C186F140C009D8F64 /* sc_finder_info_manager.m in Sources */,
+				427B5064186F140C009D8F64 /* sc_tov_print.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB921F08733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Classes/osx/prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = NewtonCommanderQuark;
+			};
+			name = Debug;
+		};
+		1DEB922008733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Classes/osx/prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = NewtonCommanderQuark;
+			};
+			name = Release;
+		};
+		1DEB922308733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		1DEB922408733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "NewtonCommanderQuark" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB921F08733DC00010E9CD /* Debug */,
+				1DEB922008733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "NewtonCommanderQuark" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB922308733DC00010E9CD /* Debug */,
+				1DEB922408733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}
