@@ -1,5 +1,5 @@
 //
-// Prefix header for all source files of the 'SharedCode Core+Worker' target in the 'SharedCode Core+Worker' project.
+// Prefix header for all source files of the 'NewtonCommanderQuark' target in the 'NewtonCommanderQuark' project.
 //
 
 #ifdef __OBJC__
