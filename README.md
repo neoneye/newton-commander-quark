@@ -15,6 +15,9 @@ To run the example project; clone the repo, and run `pod install` from the Proje
 
 ## Requirements
 
+- OSX 10.9 (Mavericks)
+- Xcode 5.0.2
+
 ## Installation
 
 newton-commander-quark is not yet available through [CocoaPods](http://cocoapods.org).
