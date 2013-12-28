@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "newton-commander-quark"
-  s.version      = "0.1.3"
+  s.version      = "0.1.4"
   s.summary      = "Shared low-level code used across Newton Commander's submodules."
   s.description  = <<-DESC
       A quark is an elementary particle and a fundamental constituent of matter.
