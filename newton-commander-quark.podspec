@@ -7,13 +7,15 @@
 Pod::Spec.new do |s|
   s.name         = "newton-commander-quark"
   s.version      = "0.1.0"
-  s.summary      = "A short description of newton-commander-quark."
+  s.summary      = "Shared low-level code used across Newton Commander's submodules."
   s.description  = <<-DESC
-                    An optional longer description of newton-commander-quark
-
-                    * Markdown format.
-                    * Don't worry about the indent, we strip it!
-                   DESC
+      A quark is an elementary particle and a fundamental constituent of matter.
+	  
+	  Features
+	  - Copying files
+	  - Moving files
+	  - Listing content of a folder
+      DESC
   s.homepage     = "https://github.com/neoneye/newton-commander-quark"
   s.screenshots  = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license      = 'MIT'
