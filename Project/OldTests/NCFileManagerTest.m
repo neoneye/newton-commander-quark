@@ -246,8 +246,8 @@
 }
 
 -(void)testSymlink1 {
-	NSString* path_dir = @"/usr/include";
-	NSString* path_link = [self mklink:@"test_link" dest:@"/usr/include"];
+	NSString* path_dir = @"/usr/bin";
+	NSString* path_link = [self mklink:@"test_link" dest:@"/usr/bin"];
 	
 	NSString* expected = path_dir;
 	NSString* actual = [[NCFileManager shared] resolvePath:path_link];
