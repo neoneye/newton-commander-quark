@@ -143,7 +143,7 @@ NSNumber* number_with_inode(ino_t inode) {
 			// So no need to deal check for hardlinks
 
 			NSString* sl_path = nil;
-			int len = readlink(p->fts_path, symlink_path, sizeof(symlink_path) - 1);
+			int len = (int)readlink(p->fts_path, symlink_path, sizeof(symlink_path) - 1);
 			if(len >= 0) {
 				symlink_path[len] = '\0';
 				sl_path = [NSString stringWithUTF8String:symlink_path];

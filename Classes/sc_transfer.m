@@ -214,7 +214,7 @@
 	NSAssert(m_queue_pending, @"pending queue must be initialized. performCopy must be invoked before processNext.");
 	NSAssert(m_queue_completed, @"completed queue must be initialized. performCopy must be invoked before processNext.");
 
-	unsigned int n_pending = [m_queue_pending count];
+	NSUInteger n_pending = [m_queue_pending count];
 	if(n_pending == 0) {
 		return;
 	}
@@ -243,8 +243,8 @@
 	}
 #endif
 
-	unsigned int n_completed = [m_queue_completed count];
-	unsigned int n_total = n_pending + n_completed;
+	NSUInteger n_completed = [m_queue_completed count];
+	NSUInteger n_total = n_pending + n_completed;
 
 	
 	TOVCopier* v = m_copier;
@@ -386,8 +386,8 @@
 }
 
 -(void)abortOperation {
-	unsigned int n_pending = [m_queue_pending count];
-	unsigned int n_completed = [m_queue_completed count];
+	NSUInteger n_pending = [m_queue_pending count];
+	NSUInteger n_completed = [m_queue_completed count];
 
 	[m_queue_pending removeAllObjects];
 	[m_queue_completed removeAllObjects];

@@ -95,11 +95,11 @@ void copy_xattr_fd(int from_fd, int to_fd) {
 	int index = 0;
 	char* name = buffer;
 	for(; name < buffer+buffer_size; name += strlen(name) + 1, index++) {
-		int size = fgetxattr(from_fd, name, 0, 0, 0, options);
+		int size = (int)fgetxattr(from_fd, name, 0, 0, 0, options);
 		
 		if(size > 0) {
 			char* buf2 = (char*)malloc(size);
-			int size2 = fgetxattr(from_fd, name, buf2, size, 0, options);
+			int size2 = (int)fgetxattr(from_fd, name, buf2, size, 0, options);
 
 			if(size != size2) {
 				printf("ERROR: second size mismatch\n");
