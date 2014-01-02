@@ -1,7 +1,7 @@
-pod "newton-commander-quark", :path => "../newton-commander-quark.podspec"
+platform :osx, '10.9'
+
+xcodeproj "NewtonCommanderQuark"
 
 target "Demo" do
-end
-
-target "DemoTests" do
+  pod "newton-commander-quark", :path => "../newton-commander-quark.podspec"
 end

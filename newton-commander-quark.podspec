@@ -19,13 +19,7 @@ Pod::Spec.new do |s|
   s.platform     = :osx, '10.9'
   s.osx.deployment_target = '10.9'
   s.requires_arc = true
-
-  s.source_files = 'Classes/**/*.{h,m}'
-  # s.resources = 'Assets'
-
-  s.ios.exclude_files = 'Classes/osx'
-  s.osx.exclude_files = 'Classes/ios', 'Classes/osx/*Test.*'
-  s.public_header_files = 'Classes/**/*.h'
-  # s.frameworks = 'SomeFramework', 'AnotherFramework'
-  # s.dependency 'JSONKit', '~> 1.4'
+  s.source_files = 'Classes/*.{h,m}'
+  s.osx.exclude_files = 'Classes/*Test.*'
+  s.public_header_files = 'Classes/*.h'
 end
