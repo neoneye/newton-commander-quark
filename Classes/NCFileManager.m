@@ -194,16 +194,11 @@ NSDate* get_backupdate(const char* path) {
 
 +(NCFileManager*)shared {
     static NCFileManager* shared = nil;
-    if(!shared) {
-        shared = [[NCFileManager allocWithZone:NULL] init];
-    }
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        shared = [NCFileManager new];
+    });
     return shared;
-}
-
-- (id)init {
-	if(self = [super init]) {
-	}
-    return self;
 }
 
 #pragma mark -

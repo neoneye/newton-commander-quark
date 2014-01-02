@@ -12,10 +12,11 @@
 @implementation FinderInfoManager
 
 +(FinderInfoManager*)shared {
-    static FinderInfoManager* shared = nil;
-    if(!shared) {
-        shared = [[FinderInfoManager alloc] init];
-    }
+    static FinderInfoManager *shared = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        shared = [FinderInfoManager new];
+    });
     return shared;
 }
 

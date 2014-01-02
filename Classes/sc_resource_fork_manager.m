@@ -13,9 +13,10 @@
 
 +(ResourceForkManager*)shared {
     static ResourceForkManager* shared = nil;
-    if(!shared) {
-        shared = [[ResourceForkManager alloc] init];
-    }
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        shared = [ResourceForkManager new];
+    });
     return shared;
 }
 
