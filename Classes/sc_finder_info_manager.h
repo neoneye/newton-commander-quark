@@ -4,8 +4,8 @@
 //
 #include <Foundation/Foundation.h>
 
-@interface FinderInfoManager : NSObject {
-}
+@interface FinderInfoManager : NSObject
+
 +(FinderInfoManager*)shared;
 
 /*

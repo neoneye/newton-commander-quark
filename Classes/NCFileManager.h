@@ -48,9 +48,8 @@ extern NSString * const NCFileTypeUnknown;
 
 
 
-@interface NCFileManager : NSObject {
+@interface NCFileManager : NSObject
 
-}
 +(NCFileManager*)shared;
 
 /*

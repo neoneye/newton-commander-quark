@@ -62,6 +62,18 @@
 @end // class TransferOperationThread
 
 
+@interface TransferOperation () {
+	TransferOperationThread* m_thread;
+	NSArray* m_names;
+	NSString* m_from_dir;
+	NSString* m_to_dir;
+	
+	// YES=move operation. NO=copy operation
+	BOOL m_is_move;
+}
+
+@end
+
 @implementation TransferOperationThread
 
 @synthesize names = m_names;

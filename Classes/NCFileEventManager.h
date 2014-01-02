@@ -15,12 +15,7 @@ typedef struct NCFileEventManagerPrivate NCFileEventManagerPrivate;
 -(void)fileEventManager:(NCFileEventManager*)fileEventManager changeOccured:(NSArray*)ary;
 @end
 
-@interface NCFileEventManager : NSObject {
-	NSObject <NCFileEventManagerDelegate> *m_delegate;
-	NCFileEventManagerPrivate* m_private;
-	NSArray* m_paths_to_watch;
-	BOOL m_is_running;
-}
+@interface NCFileEventManager : NSObject 
 -(void)setDelegate:(NSObject <NCFileEventManagerDelegate> *)delegate;
 
 -(void)start;
@@ -30,10 +25,3 @@ typedef struct NCFileEventManagerPrivate NCFileEventManagerPrivate;
 
 -(void)setPathsToWatch:(NSArray*)paths;
 @end
-
-
-//@interface NSObject (NCFileEventManagerDelegate)
-//
-//-(void)fileEventManager:(NCFileEventManager*)fileEventManager changeOccured:(NSArray*)ary;
-//
-//@end

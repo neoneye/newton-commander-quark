@@ -10,15 +10,7 @@
 @class TransferOperationThread;
 
 
-@interface TransferOperation : NSObject {
-	TransferOperationThread* m_thread;
-	NSArray* m_names;
-	NSString* m_from_dir;
-	NSString* m_to_dir; 
-	
-	// YES=move operation. NO=copy operation
-	BOOL m_is_move;
-}
+@interface TransferOperation : NSObject 
 @property (weak) id<TransferOperationDelegate> delegate;
 @property (strong) NSArray* names;
 @property (strong) NSString* fromDir;

@@ -4,8 +4,8 @@
 //
 #include <Foundation/Foundation.h>
 
-@interface ResourceForkManager : NSObject {
-}
+@interface ResourceForkManager : NSObject
+
 +(ResourceForkManager*)shared;
 
 -(NSData*)getResourceForkFromFile:(NSString*)path;

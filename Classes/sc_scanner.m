@@ -16,6 +16,16 @@ NSNumber* number_with_inode(ino_t inode) {
 	return [NSNumber numberWithUnsignedLongLong:(unsigned long long)inode];
 }
 
+@interface TraversalScanner () {
+	BOOL m_error;
+	NSMutableArray* m_traversal_object_array;
+	NSMutableDictionary* m_inode_dict;
+	
+	unsigned long long m_bytes_total; // filesize in bytes
+	unsigned long long m_count_total; // number of items
+}
+
+@end
 
 @implementation TraversalScanner
 

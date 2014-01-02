@@ -590,7 +590,16 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 	*/
 }
 
+@interface TOVCopier () {
+	NSString* m_source_path;
+	NSString* m_target_path;
+	unsigned long long m_bytes_copied;
+	
+	NSUInteger m_status_code;
+	NSString* m_status_message;
+}
 
+@end
 
 @implementation TOVCopier
 

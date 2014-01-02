@@ -22,14 +22,8 @@ enum {
 	kCopierStatusUnknownOther     = 0x1008,
 };
 
-@interface TOVCopier : NSObject <TraversalObjectVisitor> {
-	NSString* m_source_path;
-	NSString* m_target_path;
-	unsigned long long m_bytes_copied;
-	
-	NSUInteger m_status_code;
-	NSString* m_status_message;
-}
+@interface TOVCopier : NSObject <TraversalObjectVisitor>
+
 @property (strong) NSString* sourcePath;
 @property (strong) NSString* targetPath;
 @property (assign) unsigned long long bytesCopied;

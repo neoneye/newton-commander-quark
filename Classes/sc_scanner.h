@@ -10,14 +10,8 @@
 /*
 TODO: error handling. m_error is there, but no code for dealing with errors.
 */
-@interface TraversalScanner : NSObject {
-	BOOL m_error;
-	NSMutableArray* m_traversal_object_array;
-	NSMutableDictionary* m_inode_dict;
+@interface TraversalScanner : NSObject
 
-	unsigned long long m_bytes_total; // filesize in bytes
-	unsigned long long m_count_total; // number of items
-}
 @property (assign) unsigned long long bytesTotal;
 @property (assign) unsigned long long countTotal;
 

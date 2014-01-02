@@ -8,6 +8,14 @@
 
 #import "sc_tov_print.h"
 
+@interface TOVPrint () {
+	NSMutableString* m_result;
+	NSString* m_source_path;
+	NSString* m_target_path;
+}
+
+@end
+
 @implementation TOVPrint
 
 @synthesize sourcePath = m_source_path;
