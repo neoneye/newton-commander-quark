@@ -456,7 +456,7 @@ NSDate* get_backupdate(const char* path) {
 		path = [path stringByAppendingPathComponent:name];
 		int rc = lstat([fm fileSystemRepresentationWithPath:path], &st);
 		if(rc == -1) {
-			// NSLog(@"cannot lstat file: %@", path);
+			NSLog(@"cannot lstat file: %@", path);
 			return nil;
 		}
 
@@ -467,7 +467,7 @@ NSDate* get_backupdate(const char* path) {
 		if(S_ISLNK(st.st_mode)) {
 			NSString* target = [fm destinationOfSymbolicLinkAtPath:path error:NULL];
 			if(!target) {
-				// NSLog(@"symlink didn't return a string: '%@'", path);
+				NSLog(@"symlink didn't return a string: '%@'", path);
 				return nil;
 			}
 
@@ -477,7 +477,7 @@ NSDate* get_backupdate(const char* path) {
 			}
 			
 			if([set containsObject:path]) {
-				// NSLog(@"loop detected with symlink: '%@'", path);
+				NSLog(@"loop detected with symlink: '%@'", path);
 				return nil;
 			}
 			[set addObject:path];
@@ -493,7 +493,7 @@ NSDate* get_backupdate(const char* path) {
 			// NSString* target = [path nc_stringByResolvingAliasMode:NULL];
 			NSString* target = [self resolveAlias:path mode:NULL];
 			if(!target) {
-				// NSLog(@"alias didn't return a string: '%@'", path);
+				NSLog(@"alias didn't return a string: '%@'", path);
 				continue;
 			}
 
@@ -504,7 +504,7 @@ NSDate* get_backupdate(const char* path) {
 			}
 
 			if([set containsObject:path]) {
-				// NSLog(@"loop detected with alias: '%@'", path);
+				NSLog(@"loop detected with alias: '%@'", path);
 				return nil;
 			}
 			[set addObject:path];

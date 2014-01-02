@@ -7,10 +7,11 @@
 //
 
 #import "NCDirEnumeratorTest.h"
-#import <NCDirEnumerator.h>
+//#import <NCDirEnumerator.h>
 
 @implementation NCDirEnumeratorTest
 
+#if 0
 -(void)test1 {
 	NCDirEnumerator* e = [NCDirEnumerator enumeratorWithPath:@"/"];
 	STAssertNotNil(e, @"must always return an enumerator for a valid path");
@@ -58,5 +59,6 @@
 	NCDirEnumerator* e = [NCDirEnumerator enumeratorWithPath:@"/non_existing_dir"];
 	STAssertNil(e, @"invalid paths should not return an enumerator");                     
 }
+#endif
 
 @end

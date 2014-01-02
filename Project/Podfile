@@ -5,3 +5,7 @@ xcodeproj "NewtonCommanderQuark"
 target "Demo" do
   pod "newton-commander-quark", :path => "../newton-commander-quark.podspec"
 end
+
+target "OldTests" do
+  pod "newton-commander-quark", :path => "../newton-commander-quark.podspec"
+end
