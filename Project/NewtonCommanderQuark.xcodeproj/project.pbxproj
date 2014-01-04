@@ -48,7 +48,6 @@
 		4235F9B918757BE500F7B45D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4235F9C018757BE500F7B45D /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		D959B69FC7C442C5B21A5B74 /* libPods-OldTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OldTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E1E717CE7DA846118814C596 /* Pods-OldTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OldTests.xcconfig"; path = "Pods/Pods-OldTests.xcconfig"; sourceTree = "<group>"; };
 		EAFBEB6926A84DF58F8F733B /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7CFE7C959774EA0AE1486E5 /* Pods-Tests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.xcconfig"; path = "Pods/Pods-Tests.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -92,7 +91,6 @@
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
 				2E3982EF5EA749E0B6D88D38 /* Pods-Demo.xcconfig */,
-				E1E717CE7DA846118814C596 /* Pods-OldTests.xcconfig */,
 				F7CFE7C959774EA0AE1486E5 /* Pods-Tests.xcconfig */,
 			);
 			name = "SharedCode Core+Worker";
