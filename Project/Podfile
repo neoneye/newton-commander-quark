@@ -6,6 +6,6 @@ target "Demo" do
   pod "newton-commander-quark", :path => "../newton-commander-quark.podspec"
 end
 
-target "OldTests" do
+target "Tests" do
   pod "newton-commander-quark", :path => "../newton-commander-quark.podspec"
 end
