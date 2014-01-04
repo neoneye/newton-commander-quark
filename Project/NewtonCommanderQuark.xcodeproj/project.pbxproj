@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		272544110A104CFE9DDE8A57 /* libPods-OldTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D959B69FC7C442C5B21A5B74 /* libPods-OldTests.a */; };
-		42120DB8186F17C800191CFC /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42120DB7186F17C800191CFC /* SenTestingKit.framework */; };
 		42120DBE186F17C800191CFC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 42120DBC186F17C800191CFC /* InfoPlist.strings */; };
+		4224BD9F1877C6D40079B37E /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4235F9C018757BE500F7B45D /* XCTest.framework */; };
 		4235F99A1875730D00F7B45D /* NCFileItemFileItemsForPathTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4235F9971875730D00F7B45D /* NCFileItemFileItemsForPathTests.m */; };
-		4235F99B1875730D00F7B45D /* NCFileManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4235F9991875730D00F7B45D /* NCFileManagerTest.m */; };
+		4235F99B1875730D00F7B45D /* NCFileManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4235F9991875730D00F7B45D /* NCFileManagerTests.m */; };
 		4235F9A218757BE500F7B45D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4235F9A118757BE500F7B45D /* Cocoa.framework */; };
 		4235F9AC18757BE500F7B45D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4235F9AA18757BE500F7B45D /* InfoPlist.strings */; };
 		4235F9AE18757BE500F7B45D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4235F9AD18757BE500F7B45D /* main.m */; };
@@ -26,15 +26,12 @@
 		2E3982EF5EA749E0B6D88D38 /* Pods-Demo.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.xcconfig"; path = "Pods/Pods-Demo.xcconfig"; sourceTree = "<group>"; };
 		36A6895B439F4EF4A1B9C952 /* libPods-Demo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Demo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		421079D611F11407001372D8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		42120DB6186F17C800191CFC /* OldTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OldTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		42120DB7186F17C800191CFC /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		42120DB6186F17C800191CFC /* OldTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OldTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		42120DBB186F17C800191CFC /* OldTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OldTests-Info.plist"; sourceTree = "<group>"; };
 		42120DBD186F17C800191CFC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		42120DC1186F17C800191CFC /* OldTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OldTests-Prefix.pch"; sourceTree = "<group>"; };
-		4235F9961875730D00F7B45D /* NCFileItemFileItemsForPathTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCFileItemFileItemsForPathTests.h; sourceTree = "<group>"; };
 		4235F9971875730D00F7B45D /* NCFileItemFileItemsForPathTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCFileItemFileItemsForPathTests.m; sourceTree = "<group>"; };
-		4235F9981875730D00F7B45D /* NCFileManagerTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCFileManagerTest.h; sourceTree = "<group>"; };
-		4235F9991875730D00F7B45D /* NCFileManagerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCFileManagerTest.m; sourceTree = "<group>"; };
+		4235F9991875730D00F7B45D /* NCFileManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCFileManagerTests.m; sourceTree = "<group>"; };
 		4235F9A018757BE500F7B45D /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4235F9A118757BE500F7B45D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		4235F9A418757BE500F7B45D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -59,7 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				42120DB8186F17C800191CFC /* SenTestingKit.framework in Frameworks */,
+				4224BD9F1877C6D40079B37E /* XCTest.framework in Frameworks */,
 				272544110A104CFE9DDE8A57 /* libPods-OldTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -79,7 +76,7 @@
 		034768DFFF38A50411DB9C8B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				42120DB6186F17C800191CFC /* OldTests.octest */,
+				42120DB6186F17C800191CFC /* OldTests.xctest */,
 				4235F9A018757BE500F7B45D /* Demo.app */,
 			);
 			name = Products;
@@ -102,7 +99,6 @@
 			isa = PBXGroup;
 			children = (
 				421079D611F11407001372D8 /* Foundation.framework */,
-				42120DB7186F17C800191CFC /* SenTestingKit.framework */,
 				4235F9A118757BE500F7B45D /* Cocoa.framework */,
 				4235F9C018757BE500F7B45D /* XCTest.framework */,
 				4235F9A318757BE500F7B45D /* Other Frameworks */,
@@ -115,10 +111,8 @@
 		42120DB9186F17C800191CFC /* OldTests */ = {
 			isa = PBXGroup;
 			children = (
-				4235F9961875730D00F7B45D /* NCFileItemFileItemsForPathTests.h */,
 				4235F9971875730D00F7B45D /* NCFileItemFileItemsForPathTests.m */,
-				4235F9981875730D00F7B45D /* NCFileManagerTest.h */,
-				4235F9991875730D00F7B45D /* NCFileManagerTest.m */,
+				4235F9991875730D00F7B45D /* NCFileManagerTests.m */,
 				42120DBA186F17C800191CFC /* Supporting Files */,
 			);
 			path = OldTests;
@@ -187,8 +181,8 @@
 			);
 			name = OldTests;
 			productName = OldTests;
-			productReference = 42120DB6186F17C800191CFC /* OldTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productReference = 42120DB6186F17C800191CFC /* OldTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		4235F99F18757BE500F7B45D /* Demo */ = {
 			isa = PBXNativeTarget;
@@ -335,7 +329,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4235F99B1875730D00F7B45D /* NCFileManagerTest.m in Sources */,
+				4235F99B1875730D00F7B45D /* NCFileManagerTests.m in Sources */,
 				4235F99A1875730D00F7B45D /* NCFileItemFileItemsForPathTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -453,7 +447,6 @@
 				INFOPLIST_FILE = "OldTests/OldTests-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -497,7 +490,6 @@
 				INFOPLIST_FILE = "OldTests/OldTests-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};

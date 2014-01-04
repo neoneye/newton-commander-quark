@@ -1,12 +1,14 @@
 //
-// NCFileManagerTest.m
+// NCFileManagerTests.m
 // Newton Commander
 //
-
-#import "NCFileManagerTest.h"
 #import "NCFileManager.h"
+#import <XCTest/XCTest.h>
 
-@implementation NCFileManagerTest
+@interface NCFileManagerTests : XCTestCase
+@end
+
+@implementation NCFileManagerTests
 
 -(NSString*)nc_readlink:(NSString*)path {
 	const char* read_path = [path fileSystemRepresentation];
@@ -19,7 +21,6 @@
 	return nil;
 }
 
-
 -(void)testStringByResolvingSymlink1 {
 	/*
 	on Mac OS X 10.6
@@ -29,7 +30,7 @@
 		NSString* path = @"/tmp";
 		NSString* expected = @"private/tmp";
 		NSString* actual = [self nc_readlink:path];
-		STAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
+		XCTAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
 	}
 	{
 		NSString* path = @"/tmp";
@@ -39,7 +40,7 @@
 		which makes stringByResolvingSymlinksInPath not suitable for us to use
 		*/
 		NSString* actual = [path stringByResolvingSymlinksInPath];
-		STAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
+		XCTAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
 	}
 	{
 		/*
@@ -52,7 +53,7 @@
 			error:NULL];
 
 		NSString* expected = @"private/tmp";
-		STAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
+		XCTAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
 	}
 }
 
@@ -65,59 +66,65 @@
 		NSString* path = @"/usr/X11R6";
 		NSString* expected = @"X11";
 		NSString* actual = [self nc_readlink:path];
-		STAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
+		XCTAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
 	}
 	{
 		NSString* path = @"/usr/X11R6";
 		NSString* expected = @"/usr/X11";
 		NSString* actual = [path stringByResolvingSymlinksInPath];
-		STAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
+		XCTAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
 	}
 }
 
 -(void)testStringByResolvingSymlink3 {
 	NSString* path = @"/non_existing_dir";
 	NSString* actual = [self nc_readlink:path];
-	STAssertNil(actual, @"invalid paths should not return anything");                     
+	XCTAssertNil(actual, @"invalid paths should not return anything");                     
 }
 
 -(void)testNormalizedPath1 {
 	NSString* path = @"/";
 	NSString* expected = @"/";
 	NSString* actual = [[NCFileManager shared] resolvePath:path];
-	STAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
+	XCTAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
 }
 
 -(void)testNormalizedPath2 {
 	NSString* path = @"/usr";
 	NSString* expected = @"/usr";
 	NSString* actual = [[NCFileManager shared] resolvePath:path];
-	STAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
+	XCTAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
 }
 
 -(void)testNormalizedPath3 {
 	NSString* path = @"/usr/share/../share";
 	NSString* expected = @"/usr/share";
 	NSString* actual = [[NCFileManager shared] resolvePath:path];
-	STAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
+	XCTAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
 }
 
 -(void)testNormalizedPath4 {
 	NSString* path = @"/usr/./share";
 	NSString* expected = @"/usr/share";
 	NSString* actual = [[NCFileManager shared] resolvePath:path];
-	STAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
+	XCTAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
 }
 
 -(void)testNormalizedPath5 {
 	NSString* path = @"/usr/X11R6";
 	NSString* expected = @"/usr/X11";
 	NSString* actual = [[NCFileManager shared] resolvePath:path];
-	STAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
+	XCTAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
 }
 
 @end
 
+
+@interface NSFileManager_ResolvePathTest_UsingTempdir : XCTestCase {
+	NSString* m_temp_dir;
+}
+
+@end
 
 @implementation NSFileManager_ResolvePathTest_UsingTempdir
 
@@ -145,6 +152,9 @@
 	// NSLog(@"setup has created the dir: '%@'", tempDirectoryPath);
 }
 
+/*
+ create dir inside tempdir and return absolute path to it
+ */
 -(NSString*)mkdir:(NSString*)name {
 	NSAssert(name, @"must not be nil");
 	NSAssert(m_temp_dir, @"must always run this test inside a sandbox dir");
@@ -163,6 +173,9 @@
 	return path;
 }
 
+/*
+ create file inside tempdir and return absolute path to it
+ */
 -(NSString*)mkfile:(NSString*)name {
 	NSAssert(name, @"must not be nil");
 	NSAssert(m_temp_dir, @"must always run this test inside a sandbox dir");
@@ -180,6 +193,9 @@
 	return path;
 }
 
+/*
+ create symlink inside tempdir and return absolute path to it
+ */
 -(NSString*)mklink:(NSString*)name dest:(NSString*)dest {
 	NSAssert(name, @"must not be nil");                 
 	NSAssert(dest, @"must not be nil");
@@ -198,6 +214,9 @@
 	return path;
 }
 
+/*
+ create alias inside tempdir and return absolute path to it
+ */
 -(NSString*)mkalias:(NSString*)destname dest:(NSString*)srcname {
 	NSAssert(srcname, @"must not be nil");                 
 	NSAssert(destname, @"must not be nil");
@@ -231,7 +250,7 @@
 	NSString* actual = [[NCFileManager shared] resolvePath:path];
 	expected = [expected stringByStandardizingPath];
 	actual = [actual stringByStandardizingPath];
-	STAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
+	XCTAssertEqualObjects(actual, expected, @"Expected '%@', but got '%@'", expected, actual);
 }
 
 -(void)test2 {
@@ -242,7 +261,7 @@
 	NSString* actual = [[NCFileManager shared] resolvePath:path_link];
 	expected = [expected stringByStandardizingPath];
 	actual = [actual stringByStandardizingPath];
-	STAssertEqualObjects(actual, expected, @"Path mismatch");
+	XCTAssertEqualObjects(actual, expected, @"Path mismatch");
 }
 
 -(void)testSymlink1 {
@@ -253,7 +272,7 @@
 	NSString* actual = [[NCFileManager shared] resolvePath:path_link];
 	expected = [expected stringByStandardizingPath];
 	actual = [actual stringByStandardizingPath];
-	STAssertEqualObjects(actual, expected, @"Path mismatch");
+	XCTAssertEqualObjects(actual, expected, @"Path mismatch");
 }
 
 -(void)testSymlink2 {
@@ -266,13 +285,13 @@
 	NSString* actual = [[NCFileManager shared] resolvePath:path_link2];
 	expected = [expected stringByStandardizingPath];
 	actual = [actual stringByStandardizingPath];
-	STAssertEqualObjects(actual, expected, @"Path mismatch");
+	XCTAssertEqualObjects(actual, expected, @"Path mismatch");
 }
 
 -(void)testSymlinkCycle1 {
 	NSString* path_link = [self mklink:@"test_link" dest:@"test_link"];
 	NSString* actual = [[NCFileManager shared] resolvePath:path_link];
-	STAssertNil(actual, @"paths containing loops should not return anything");                     
+	XCTAssertNil(actual, @"paths containing loops should not return anything");                     
 }
 
 -(void)testAlias1 {
@@ -283,7 +302,7 @@
 	NSString* actual = [[NCFileManager shared] resolvePath:path_link];
 	expected = [expected stringByStandardizingPath];
 	actual = [actual stringByStandardizingPath];
-	STAssertEqualObjects(actual, expected, @"Path mismatch");
+	XCTAssertEqualObjects(actual, expected, @"Path mismatch");
 }
 
 -(void)testAlias2 {
@@ -296,12 +315,12 @@
 	NSString* actual = [[NCFileManager shared] resolvePath:path_link2];
 	expected = [expected stringByStandardizingPath];
 	actual = [actual stringByStandardizingPath];
-	STAssertEqualObjects(actual, expected, @"Path mismatch");
+	XCTAssertEqualObjects(actual, expected, @"Path mismatch");
 }
 
 -(void)testAliasCycle1 {
 	// the alias code refuses to create loops
-	STAssertThrows([self mkalias:@"test_alias" dest:@"test_alias"], @"alias cycle");
+	XCTAssertThrows([self mkalias:@"test_alias" dest:@"test_alias"], @"alias cycle");
 }
 
 @end

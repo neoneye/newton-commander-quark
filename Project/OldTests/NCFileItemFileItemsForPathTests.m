@@ -2,9 +2,11 @@
 // NCFileItemFileItemsForPathTests.m
 // Newton Commander
 //
-
-#import "NCFileItemFileItemsForPathTests.h"
 #import "NCFileItem+FileItemsForPath.h"
+#import <XCTest/XCTest.h>
+
+@interface NCFileItemFileItemsForPathTests : XCTestCase
+@end
 
 @implementation NCFileItemFileItemsForPathTests
 
@@ -21,10 +23,10 @@
 		if([name isEqual:@"usr"]) { has_usr = YES; }
 		if([name isEqual:@"bin"]) { has_bin = YES; }
 	}
-	STAssertTrue(has_tmp, @"the root dir typically has a /tmp dir");
-	STAssertTrue(has_home, @"the root dir typically has a /home dir");
-	STAssertTrue(has_usr, @"the root dir typically has a /usr dir");
-	STAssertTrue(has_bin, @"the root dir typically has a /bin dir");
+	XCTAssertTrue(has_tmp, @"the root dir typically has a /tmp dir");
+	XCTAssertTrue(has_home, @"the root dir typically has a /home dir");
+	XCTAssertTrue(has_usr, @"the root dir typically has a /usr dir");
+	XCTAssertTrue(has_bin, @"the root dir typically has a /bin dir");
 }
 
 -(void)test2 {
@@ -38,9 +40,9 @@
 		if([name isEqual:@"share"]) { has_share = YES; }
 		if([name isEqual:@"bin"]) { has_bin = YES; }
 	}
-	STAssertTrue(has_lib, @"the /usr dir typically has a /lib dir");
-	STAssertTrue(has_share, @"the /usr dir typically has a /share dir");
-	STAssertTrue(has_bin, @"the /usr dir typically has a /bin dir");
+	XCTAssertTrue(has_lib, @"the /usr dir typically has a /lib dir");
+	XCTAssertTrue(has_share, @"the /usr dir typically has a /share dir");
+	XCTAssertTrue(has_bin, @"the /usr dir typically has a /bin dir");
 }
 
 #if 0
