@@ -3,6 +3,7 @@
 // Newton Commander
 //
 #import "NCFileManager.h"
+#import "NCTempDir.h"
 #import <XCTest/XCTest.h>
 
 @interface NCFileManagerTests : XCTestCase
@@ -120,131 +121,19 @@
 @end
 
 
-@interface NSFileManager_ResolvePathTest_UsingTempdir : XCTestCase {
-	NSString* m_temp_dir;
-}
-
+@interface NSFileManager_ResolvePathTest : XCTestCase
+@property (nonatomic, strong) NCTempDir *tempDir;
 @end
 
-@implementation NSFileManager_ResolvePathTest_UsingTempdir
+@implementation NSFileManager_ResolvePathTest
 
 -(void)setUp {
-	/*
-	create a temporary dir, seen on Matt Gallagher's blog
-	http://cocoawithlove.com/2009/07/temporary-files-and-folders-in-cocoa.html
-	*/
-	NSString* tempDirectoryTemplate =
-	    [NSTemporaryDirectory() stringByAppendingPathComponent:@"NewtonCommander_PathExtensionsTest.XXXXXX"];
-	const char* tempDirectoryTemplateCString = [tempDirectoryTemplate fileSystemRepresentation];
-	char* tempDirectoryNameCString = (char *)malloc(strlen(tempDirectoryTemplateCString) + 1);
-	strcpy(tempDirectoryNameCString, tempDirectoryTemplateCString);
-	char* result = mkdtemp(tempDirectoryNameCString);
-	NSAssert((result != NULL), @"cannot create tempdir for testing");
-	NSString* tempDirectoryPath =
-	    [[NSFileManager defaultManager]
-	        stringWithFileSystemRepresentation:tempDirectoryNameCString
-	        length:strlen(result)];
-	free(tempDirectoryNameCString);
-
-	
-	m_temp_dir = tempDirectoryPath;
-	NSAssert(m_temp_dir, @"must always run this test inside a sandbox dir");
-	// NSLog(@"setup has created the dir: '%@'", tempDirectoryPath);
-}
-
-/*
- create dir inside tempdir and return absolute path to it
- */
--(NSString*)mkdir:(NSString*)name {
-	NSAssert(name, @"must not be nil");
-	NSAssert(m_temp_dir, @"must always run this test inside a sandbox dir");
-
-	NSString* path = [m_temp_dir stringByAppendingPathComponent:name];
-	BOOL ok = [[NSFileManager defaultManager] 
-		createDirectoryAtPath:path 
-		withIntermediateDirectories:NO 
-		attributes:nil 
-		error:NULL
-	];
-	if(!ok) {
-		NSLog(@"couldn't create dir '%@' inside '%@'", name, m_temp_dir);
-		NSAssert(nil, @"faild to create dir");
-	}
-	return path;
-}
-
-/*
- create file inside tempdir and return absolute path to it
- */
--(NSString*)mkfile:(NSString*)name {
-	NSAssert(name, @"must not be nil");
-	NSAssert(m_temp_dir, @"must always run this test inside a sandbox dir");
-
-	NSString* path = [m_temp_dir stringByAppendingPathComponent:name];
-	BOOL ok = [[NSFileManager defaultManager] 
-		createFileAtPath:path
-		contents:[NSData data]
-		attributes:nil
-	];
-	if(!ok) {
-		NSLog(@"couldn't create file '%@' inside '%@'", name, m_temp_dir);
-		NSAssert(nil, @"faild to create file");
-	}
-	return path;
-}
-
-/*
- create symlink inside tempdir and return absolute path to it
- */
--(NSString*)mklink:(NSString*)name dest:(NSString*)dest {
-	NSAssert(name, @"must not be nil");                 
-	NSAssert(dest, @"must not be nil");
-	NSAssert(m_temp_dir, @"must always run this test inside a sandbox dir");
-
-	NSString* path = [m_temp_dir stringByAppendingPathComponent:name];
-	BOOL ok = [[NSFileManager defaultManager] 
-		createSymbolicLinkAtPath:path 
-		withDestinationPath:dest 
-		error:NULL
-	];
-	if(!ok) {
-		NSLog(@"couldn't create link '%@' inside '%@'  target: '%@'", name, m_temp_dir, dest);
-		NSAssert(nil, @"faild to create link");
-	}
-	return path;
-}
-
-/*
- create alias inside tempdir and return absolute path to it
- */
--(NSString*)mkalias:(NSString*)destname dest:(NSString*)srcname {
-	NSAssert(srcname, @"must not be nil");                 
-	NSAssert(destname, @"must not be nil");
-	NSAssert(m_temp_dir, @"must always run this test inside a sandbox dir");
-
-	NSString* destpath = [m_temp_dir stringByAppendingPathComponent:destname];
-	NSURL* src = [NSURL fileURLWithPath:[m_temp_dir stringByAppendingPathComponent:srcname]];
-	NSURL* dest = [NSURL fileURLWithPath:destpath];                                        
-
-	NSData* data = [src bookmarkDataWithOptions:NSURLBookmarkCreationSuitableForBookmarkFile
-	                  includingResourceValuesForKeys:nil
-	                                   relativeToURL:nil
-	                                           error:NULL];
-	NSAssert(data, @"mkalias - no alias data");
-	BOOL ok = [NSURL writeBookmarkData:data
-	                toURL:dest
-	              options:0
-	                error:NULL];
-
-	if(!ok) {
-		NSLog(@"couldn't create alias '%@' inside '%@'  target: '%@'", srcname, m_temp_dir, destname);
-		NSAssert(nil, @"faild to create alias");
-	}
-	return destpath;
+    [super setUp];
+	self.tempDir = [NCTempDir createTempDir:@"NSFileManager_ResolvePathTest.XXXXXX"];
 }
 
 -(void)test1 {
-	NSString* path = [self mkdir:@"test_dir"];
+	NSString* path = [_tempDir mkdir:@"test_dir"];
 	
 	NSString* expected = path;
 	NSString* actual = [[NCFileManager shared] resolvePath:path];
@@ -254,8 +143,8 @@
 }
 
 -(void)test2 {
-	NSString* path_dir = [self mkdir:@"test_dir"];
-	NSString* path_link = [self mklink:@"test_link" dest:@"test_dir"];
+	NSString* path_dir = [_tempDir mkdir:@"test_dir"];
+	NSString* path_link = [_tempDir mklink:@"test_link" target:@"test_dir"];
 	
 	NSString* expected = path_dir;
 	NSString* actual = [[NCFileManager shared] resolvePath:path_link];
@@ -266,7 +155,7 @@
 
 -(void)testSymlink1 {
 	NSString* path_dir = @"/usr/bin";
-	NSString* path_link = [self mklink:@"test_link" dest:@"/usr/bin"];
+	NSString* path_link = [_tempDir mklink:@"test_link" target:@"/usr/bin"];
 	
 	NSString* expected = path_dir;
 	NSString* actual = [[NCFileManager shared] resolvePath:path_link];
@@ -276,9 +165,9 @@
 }
 
 -(void)testSymlink2 {
-	[self mkdir:@"test_dir"];
-	NSString* path_file = [self mkfile:@"test_dir/test_file"];
-	NSString* path_link = [self mklink:@"test_link" dest:@"test_dir"];
+	[_tempDir mkdir:@"test_dir"];
+	NSString* path_file = [_tempDir mkfile:@"test_dir/test_file"];
+	NSString* path_link = [_tempDir mklink:@"test_link" target:@"test_dir"];
 	NSString* path_link2 = [path_link stringByAppendingPathComponent:@"test_file"];
 	
 	NSString* expected = path_file;
@@ -289,14 +178,14 @@
 }
 
 -(void)testSymlinkCycle1 {
-	NSString* path_link = [self mklink:@"test_link" dest:@"test_link"];
+	NSString* path_link = [_tempDir mklink:@"test_link" target:@"test_link"];
 	NSString* actual = [[NCFileManager shared] resolvePath:path_link];
 	XCTAssertNil(actual, @"paths containing loops should not return anything");                     
 }
 
 -(void)testAlias1 {
-	NSString* path_dir = [self mkdir:@"test_dir"];
-	NSString* path_link = [self mkalias:@"test_alias" dest:@"test_dir"];
+	NSString* path_dir = [_tempDir mkdir:@"test_dir"];
+	NSString* path_link = [_tempDir mkalias:@"test_alias" target:@"test_dir"];
 	
 	NSString* expected = path_dir;
 	NSString* actual = [[NCFileManager shared] resolvePath:path_link];
@@ -306,9 +195,9 @@
 }
 
 -(void)testAlias2 {
-	[self mkdir:@"test_dir"];
-	NSString* path_file = [self mkfile:@"test_dir/test_file"];
-	NSString* path_link = [self mkalias:@"test_alias" dest:@"test_dir"];
+	[_tempDir mkdir:@"test_dir"];
+	NSString* path_file = [_tempDir mkfile:@"test_dir/test_file"];
+	NSString* path_link = [_tempDir mkalias:@"test_alias" target:@"test_dir"];
 	NSString* path_link2 = [path_link stringByAppendingPathComponent:@"test_file"];
 	
 	NSString* expected = path_file;
@@ -320,7 +209,7 @@
 
 -(void)testAliasCycle1 {
 	// the alias code refuses to create loops
-	XCTAssertThrows([self mkalias:@"test_alias" dest:@"test_alias"], @"alias cycle");
+	XCTAssertThrows([_tempDir mkalias:@"test_alias" target:@"test_alias"], @"alias cycle");
 }
 
 @end
