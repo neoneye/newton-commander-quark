@@ -20,6 +20,7 @@
 		4235F9BA18757BE500F7B45D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4235F9B918757BE500F7B45D /* Images.xcassets */; };
 		4270FA61187A106C00567FF2 /* NCTransferOperationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4270FA60187A106C00567FF2 /* NCTransferOperationTests.m */; };
 		4270FA64187A113900567FF2 /* NCTempDir.m in Sources */ = {isa = PBXBuildFile; fileRef = 4270FA63187A113900567FF2 /* NCTempDir.m */; };
+		4295657B187BBE6A00A5198A /* NSArrayExtractTopLevelTraversalObjectsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4295657A187BBE6A00A5198A /* NSArrayExtractTopLevelTraversalObjectsTests.m */; };
 		42E1EBB2187BA8B2002388C0 /* NCTransferScannerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E1EBB1187BA8B2002388C0 /* NCTransferScannerTests.m */; };
 		924A7A47712C4F2FADB0BDBD /* libPods-Demo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 36A6895B439F4EF4A1B9C952 /* libPods-Demo.a */; };
 		B603D05BBE674C6F9E47AB35 /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EAFBEB6926A84DF58F8F733B /* libPods-Tests.a */; };
@@ -53,6 +54,7 @@
 		4270FA60187A106C00567FF2 /* NCTransferOperationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCTransferOperationTests.m; sourceTree = "<group>"; };
 		4270FA62187A113900567FF2 /* NCTempDir.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCTempDir.h; sourceTree = "<group>"; };
 		4270FA63187A113900567FF2 /* NCTempDir.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCTempDir.m; sourceTree = "<group>"; };
+		4295657A187BBE6A00A5198A /* NSArrayExtractTopLevelTraversalObjectsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSArrayExtractTopLevelTraversalObjectsTests.m; sourceTree = "<group>"; };
 		42E1EBB1187BA8B2002388C0 /* NCTransferScannerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCTransferScannerTests.m; sourceTree = "<group>"; };
 		D959B69FC7C442C5B21A5B74 /* libPods-OldTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OldTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAFBEB6926A84DF58F8F733B /* libPods-Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -126,6 +128,7 @@
 				4270FA63187A113900567FF2 /* NCTempDir.m */,
 				4270FA60187A106C00567FF2 /* NCTransferOperationTests.m */,
 				42E1EBB1187BA8B2002388C0 /* NCTransferScannerTests.m */,
+				4295657A187BBE6A00A5198A /* NSArrayExtractTopLevelTraversalObjectsTests.m */,
 				42120DBA186F17C800191CFC /* Supporting Files */,
 			);
 			path = Tests;
@@ -345,6 +348,7 @@
 				4270FA64187A113900567FF2 /* NCTempDir.m in Sources */,
 				4235F99B1875730D00F7B45D /* NCFileManagerTests.m in Sources */,
 				42E1EBB2187BA8B2002388C0 /* NCTransferScannerTests.m in Sources */,
+				4295657B187BBE6A00A5198A /* NSArrayExtractTopLevelTraversalObjectsTests.m in Sources */,
 				4235F99A1875730D00F7B45D /* NCFileItemFileItemsForPathTests.m in Sources */,
 				4270FA61187A106C00567FF2 /* NCTransferOperationTests.m in Sources */,
 			);
