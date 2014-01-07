@@ -9,7 +9,7 @@ typedef void (^NCTransferScannerProgressBlock)(NSString *name, uint64_t bytes_to
 
 @interface NCTransferScanner : NSObject
 
-@property (nonatomic, readonly) NSArray *resultTransactionObjects;
+@property (nonatomic, readonly) NSArray *resultTraversalObjects;
 @property (nonatomic, readonly) uint64_t resultBytesTotal;
 @property (nonatomic, readonly) uint64_t resultCountTotal;
 

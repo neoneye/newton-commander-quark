@@ -163,7 +163,7 @@
 			[self sendResponse:dict forKey:@"scan-complete"];
 		}
 		
-		[m_queue_pending addObjectsFromArray:ts.resultTransactionObjects];
+		[m_queue_pending addObjectsFromArray:ts.resultTraversalObjects];
 	}
 }
 

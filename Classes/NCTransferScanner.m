@@ -11,7 +11,7 @@
 @property (nonatomic, strong) NSString *path;
 @property (nonatomic, strong) NSArray *names;
 @property (nonatomic, copy) NCTransferScannerProgressBlock progressBlock;
-@property (nonatomic, strong) NSArray *resultTransactionObjects;
+@property (nonatomic, strong) NSArray *resultTraversalObjects;
 @property (nonatomic, assign) uint64_t resultBytesTotal;
 @property (nonatomic, assign) uint64_t resultCountTotal;
 @end
@@ -70,7 +70,7 @@
 		}
 	}
 	
-	self.resultTransactionObjects = [maker traversalObjects];
+	self.resultTraversalObjects = [maker traversalObjects];
 	self.resultBytesTotal = [maker bytesTotal];
 	self.resultCountTotal = [maker countTotal];
 }

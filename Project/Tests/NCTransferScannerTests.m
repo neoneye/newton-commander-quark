@@ -81,7 +81,7 @@
 	}
 	{
 		NSMutableArray *actualAccumulated = [NSMutableArray new];
-		for (NSObject *obj in ts.resultTransactionObjects) {
+		for (NSObject *obj in ts.resultTraversalObjects) {
 			[actualAccumulated addObject:NSStringFromClass(obj.class)];
 		}
 		NSString *actual = [actualAccumulated componentsJoinedByString:@"\n"];
