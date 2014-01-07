@@ -11,9 +11,9 @@
 #import "sc_traversal_objects.h"
 #import "sc_tov_print.h"
 #import "sc_tov_copier.h"
-#import "sc_scanner.h"
 #import "NCTimeProfiler.h"
 #include <mach/mach_time.h>
+#import "NCTransferScanner.h"
 
 
 
@@ -132,72 +132,38 @@
 	NSAssert(m_names, @"names must be initialized");
 	NSAssert(m_from_dir, @"fromDir must be initialized");
 	NSAssert(m_to_dir, @"toDir must be initialized");
-	
-	[m_queue_pending removeAllObjects];
-	[m_queue_completed removeAllObjects];
-	
+
     @autoreleasepool {
-
-		TraversalScanner* maker = [[TraversalScanner alloc] init];
-
-		NSString* name;
-		NSEnumerator* en = [m_names objectEnumerator];
-		while(name = [en nextObject]) { 
-			
-			unsigned long long bytes_total0 = [maker bytesTotal];
-			unsigned long long count_total0 = [maker countTotal];
-			
-			{
-				TOProgressBefore* obj = [[TOProgressBefore alloc] init];
-				[obj setName:name];
-				[maker addObject:obj];
-			}
-
-			[maker appendTraverseDataForPath:[m_from_dir stringByAppendingPathComponent:name]];
-
-			{
-				TOProgressAfter* obj = [[TOProgressAfter alloc] init];
-				[obj setName:name];
-				[maker addObject:obj];
-			}
-
-			unsigned long long bytes_total1 = [maker bytesTotal];
-			unsigned long long count_total1 = [maker countTotal];
-
-			unsigned long long bytes_item = bytes_total1 - bytes_total0;
-			unsigned long long count_item = count_total1 - count_total0;
-
-
-
-        /*
-			TODO: update scan-progress
-			TODO: poll max 10 times per second some counters protected with a mutex.. run it in a thread
-			*/
-
-			NSNumber* bytesTotal = [NSNumber numberWithUnsignedLongLong:[maker bytesTotal]];
-			NSNumber* countTotal = [NSNumber numberWithUnsignedLongLong:[maker countTotal]];
+		[m_queue_pending removeAllObjects];
+		[m_queue_completed removeAllObjects];
+		
+		__weak TransferOperationThread *blockSelf = self;
+		
+		NCTransferScannerProgressBlock progressBlock = ^(NSString *name, uint64_t bytes_total, uint64_t count_total, uint64_t bytes_item, uint64_t count_item) {
+			NSNumber* bytesTotal = [NSNumber numberWithUnsignedLongLong:bytes_total];
+			NSNumber* countTotal = [NSNumber numberWithUnsignedLongLong:count_total];
 			NSNumber* bytesItem = [NSNumber numberWithUnsignedLongLong:bytes_item];
 			NSNumber* countItem = [NSNumber numberWithUnsignedLongLong:count_item];
-
+			
 			NSArray* keys = [NSArray arrayWithObjects:@"bytesTotal", @"countTotal", @"name", @"bytesItem", @"countItem", nil];
 			NSArray* objects = [NSArray arrayWithObjects:bytesTotal, countTotal, name, bytesItem, countItem, nil];
-			NSDictionary* dict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];	
-			[self sendResponse:dict forKey:@"scan-progress"];
-		}
-
-		[m_queue_pending addObjectsFromArray:[maker traversalObjects]];
-		m_bytes_total = [maker bytesTotal];
-		m_count_total = [maker countTotal];
-
+			NSDictionary* dict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+			[blockSelf sendResponse:dict forKey:@"scan-progress"];
+		};
+		
+		NCTransferScanner *ts = [NCTransferScanner scannerWithPath:m_from_dir names:m_names progressHandler:progressBlock];
+		[ts execute];
+		
 		{
-			NSNumber* bytesTotal = [NSNumber numberWithUnsignedLongLong:[maker bytesTotal]];
-			NSNumber* countTotal = [NSNumber numberWithUnsignedLongLong:[maker countTotal]];
+			NSNumber* bytesTotal = [NSNumber numberWithUnsignedLongLong:ts.resultBytesTotal];
+			NSNumber* countTotal = [NSNumber numberWithUnsignedLongLong:ts.resultCountTotal];
 			NSArray* keys = [NSArray arrayWithObjects:@"bytesTotal", @"countTotal", nil];
 			NSArray* objects = [NSArray arrayWithObjects:bytesTotal, countTotal, nil];
-			NSDictionary* dict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];	
+			NSDictionary* dict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
 			[self sendResponse:dict forKey:@"scan-complete"];
 		}
-	
+		
+		[m_queue_pending addObjectsFromArray:ts.resultTransactionObjects];
 	}
 }
 

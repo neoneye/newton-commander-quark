@@ -1,5 +1,5 @@
 PODS:
-  - newton-commander-quark (0.1.6)
+  - newton-commander-quark (0.1.7)
 
 DEPENDENCIES:
   - newton-commander-quark (from `../newton-commander-quark.podspec`)
@@ -9,6 +9,6 @@ EXTERNAL SOURCES:
     :path: ../newton-commander-quark.podspec
 
 SPEC CHECKSUMS:
-  newton-commander-quark: 7db799b325428cef49808e20d0d06fffe380ac37
+  newton-commander-quark: f22b14e1af5e31dc38e04f7591e13b1d739b9644
 
 COCOAPODS: 0.29.0
