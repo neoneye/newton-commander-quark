@@ -1,5 +1,5 @@
 //
-// sc_scanner.m
+// NCTraversalScanner.m
 // Newton Commander
 //
 #if ! __has_feature(objc_arc)
@@ -7,7 +7,7 @@
 #endif
 
 #import "NCLog.h"
-#import "sc_scanner.h"
+#import "NCTraversalScanner.h"
 #import "sc_traversal_objects.h"
 #include <fts.h>
 #include <sys/stat.h>
@@ -16,7 +16,7 @@ NSNumber* number_with_inode(ino_t inode) {
 	return [NSNumber numberWithUnsignedLongLong:(unsigned long long)inode];
 }
 
-@interface TraversalScanner () {
+@interface NCTraversalScanner () {
 	BOOL m_error;
 	NSMutableArray* m_traversal_object_array;
 	NSMutableDictionary* m_inode_dict;
@@ -27,7 +27,7 @@ NSNumber* number_with_inode(ino_t inode) {
 
 @end
 
-@implementation TraversalScanner
+@implementation NCTraversalScanner
 
 @synthesize bytesTotal = m_bytes_total;
 @synthesize countTotal = m_count_total;

@@ -5,7 +5,7 @@
 
 #import "NCTransferScanner.h"
 #import "sc_traversal_objects.h"
-#import "sc_scanner.h"
+#import "NCTraversalScanner.h"
 
 @interface NCTransferScanner ()
 @property (nonatomic, strong) NSString *path;
@@ -33,7 +33,7 @@
 }
 
 -(void)execute {
-	TraversalScanner* maker = [[TraversalScanner alloc] init];
+	NCTraversalScanner* maker = [[NCTraversalScanner alloc] init];
 	
 	for (NSString *name in _names) {
 		

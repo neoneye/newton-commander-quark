@@ -1,5 +1,5 @@
 //
-// sc_scanner.h
+// NCTraversalScanner.h
 // Newton Commander
 //
 #include <Foundation/Foundation.h>
@@ -10,7 +10,7 @@
 /*
 TODO: error handling. m_error is there, but no code for dealing with errors.
 */
-@interface TraversalScanner : NSObject
+@interface NCTraversalScanner : NSObject
 
 @property (assign) unsigned long long bytesTotal;
 @property (assign) unsigned long long countTotal;
