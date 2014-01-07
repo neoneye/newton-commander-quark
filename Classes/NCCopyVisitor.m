@@ -1,5 +1,5 @@
 //
-// sc_tov_copier.m
+// NCCopyVisitor.m
 // Newton Commander
 //
 
@@ -22,7 +22,7 @@ ATTR_CMN_BKUPTIME                   ioFlBkDat    backupDate
 
 #import "NCLog.h"
 #import "NCFileManager.h"
-#import "sc_tov_copier.h"
+#import "NCCopyVisitor.h"
 #import "sc_resource_fork_manager.h"
 #import "sc_finder_info_manager.h"
 #include <stdio.h>
@@ -590,7 +590,7 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 	*/
 }
 
-@interface TOVCopier () {
+@interface NCCopyVisitor () {
 	NSString* m_source_path;
 	NSString* m_target_path;
 	unsigned long long m_bytes_copied;
@@ -601,7 +601,7 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 
 @end
 
-@implementation TOVCopier
+@implementation NCCopyVisitor
 
 @synthesize sourcePath = m_source_path;
 @synthesize targetPath = m_target_path;

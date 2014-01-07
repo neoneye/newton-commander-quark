@@ -1,5 +1,5 @@
 //
-// sc_tov_copier.h
+// NCCopyVisitor.h
 // Newton Commander
 //
 #import <Foundation/Foundation.h>
@@ -22,7 +22,7 @@ enum {
 	kCopierStatusUnknownOther     = 0x1008,
 };
 
-@interface TOVCopier : NSObject <TraversalObjectVisitor>
+@interface NCCopyVisitor : NSObject <TraversalObjectVisitor>
 
 @property (strong) NSString* sourcePath;
 @property (strong) NSString* targetPath;

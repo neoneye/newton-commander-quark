@@ -10,7 +10,7 @@
 #import "sc_transfer.h"
 #import "sc_traversal_objects.h"
 #import "sc_tov_print.h"
-#import "sc_tov_copier.h"
+#import "NCCopyVisitor.h"
 #import "NCTimeProfiler.h"
 #include <mach/mach_time.h>
 #import "NCTransferScanner.h"
@@ -32,7 +32,6 @@
 	unsigned long long m_count_total; // number of items
 	NSMutableArray* m_queue_pending;
 	NSMutableArray* m_queue_completed;
-	TOVCopier* m_copier;
 	uint64_t m_start_time;
 	double m_elapsed_limit_triggers_progress;
 
@@ -46,7 +45,7 @@
 @property (assign) unsigned long long countTotal;
 @property (strong) NSMutableArray* queuePending;
 @property (strong) NSMutableArray* queueCompleted;
-@property (strong) TOVCopier* copier;
+@property (nonatomic, strong) NCCopyVisitor* visitorCopy;
 @property (nonatomic, strong) NCMoveVisitor* visitorMove;
 @property BOOL isMove;
 
@@ -85,7 +84,6 @@
 @synthesize countTotal = m_count_total;
 @synthesize queuePending = m_queue_pending;
 @synthesize queueCompleted = m_queue_completed;
-@synthesize copier = m_copier;
 @synthesize isMove = m_is_move;
 
 -(id)initWithTransferOperation:(TransferOperation*)transfer_operation isMove:(BOOL)is_move {
@@ -189,10 +187,10 @@
 		v.targetPath = m_to_dir;
 		self.visitorMove = v;
 	} else {
-		TOVCopier* v = [[TOVCopier alloc] init];
+		NCCopyVisitor* v = [[NCCopyVisitor alloc] init];
 		[v setSourcePath:m_from_dir];
 		[v setTargetPath:m_to_dir];
-		self.copier = v;
+		self.visitorCopy = v;
 	}
 
 	[self performSelector: @selector(processNext)
@@ -201,7 +199,8 @@
 }
 
 -(void)processNext {
-	NSAssert(m_copier, @"copier must be initialized. performCopy must be invoked before processNext.");
+	BOOL hasCopyOrMoveVisitor = (_visitorCopy != nil) || (_visitorMove != nil);
+	NSAssert(hasCopyOrMoveVisitor , @"visitorCopy or visitorMove must be initialized. performCopy must be invoked before processNext.");
 	NSAssert(m_queue_pending, @"pending queue must be initialized. performCopy must be invoked before processNext.");
 	NSAssert(m_queue_completed, @"completed queue must be initialized. performCopy must be invoked before processNext.");
 
@@ -244,8 +243,8 @@
 	/*
 	perform the copy operation of this item
 	*/
-	if (m_copier) {
-		TOVCopier* v = m_copier;
+	if (_visitorCopy) {
+		NCCopyVisitor* v = _visitorCopy;
 
 		[thing accept:v];
 		
