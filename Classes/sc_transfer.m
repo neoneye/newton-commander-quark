@@ -14,7 +14,8 @@
 #import "NCTimeProfiler.h"
 #include <mach/mach_time.h>
 #import "NCTransferScanner.h"
-
+#import "NSArray+ExtractTopLevelTraversalObjects.h"
+#import "NCMoveVisitor.h"
 
 
 
@@ -46,6 +47,7 @@
 @property (strong) NSMutableArray* queuePending;
 @property (strong) NSMutableArray* queueCompleted;
 @property (strong) TOVCopier* copier;
+@property (nonatomic, strong) NCMoveVisitor* visitorMove;
 @property BOOL isMove;
 
 -(id)initWithTransferOperation:(TransferOperation*)transfer_operation isMove:(BOOL)is_move;
@@ -163,7 +165,11 @@
 			[self sendResponse:dict forKey:@"scan-complete"];
 		}
 		
-		[m_queue_pending addObjectsFromArray:ts.resultTraversalObjects];
+		NSArray *traversalObjects = ts.resultTraversalObjects;
+		if (m_is_move) {
+			traversalObjects = [traversalObjects extractTopLevelTraversalObjects];
+		}
+		[m_queue_pending addObjectsFromArray:traversalObjects];
 	}
 }
 
@@ -176,11 +182,18 @@
 	
 	m_start_time = mach_absolute_time();
 	m_elapsed_limit_triggers_progress = 0;
-
-	TOVCopier* v = [[TOVCopier alloc] init];
-	[v setSourcePath:m_from_dir];
-	[v setTargetPath:m_to_dir];
-	self.copier = v;
+	
+	if (m_is_move) {
+		NCMoveVisitor *v = [NCMoveVisitor new];
+		v.sourcePath = m_from_dir;
+		v.targetPath = m_to_dir;
+		self.visitorMove = v;
+	} else {
+		TOVCopier* v = [[TOVCopier alloc] init];
+		[v setSourcePath:m_from_dir];
+		[v setTargetPath:m_to_dir];
+		self.copier = v;
+	}
 
 	[self performSelector: @selector(processNext)
 	           withObject: nil
@@ -198,7 +211,7 @@
 	}
 	
 	
-#if 1
+#if 0
 	if(m_is_move) {
 		/*
 		TODO: Implement the "MOVE" operation within the TransferOperationThread class
@@ -225,46 +238,51 @@
 	NSUInteger n_total = n_pending + n_completed;
 
 	
-	TOVCopier* v = m_copier;
 	id thing = [m_queue_pending objectAtIndex:0];
-
-#if 0
-	if(m_is_move) {
-		if([thing isKindOfClass:[TOFile class]]) {
-			TOFile* tofile = (TOFile*)thing;
-			NSString* path = [tofile path];
-			NSString* source_path1 = path;
-			NSString* target_path1 = [v convert:path];
-			const char* source_path = [source_path1 fileSystemRepresentation];
-			const char* target_path = [target_path1 fileSystemRepresentation];
-			LOG_INFO(@"will rename: %s -> %s", source_path, target_path);
-			if(rename(source_path, target_path)) {
-				LOG_ERROR(@"error occurred while renaming: %@ -> %@", source_path1, target_path1);
-				return;
-			}
-			LOG_INFO(@"rename successful");
-		}
-	}
-#endif
+	unsigned long long bytesTransfered = 0;
 
 	/*
 	perform the copy operation of this item
 	*/
-#if 1
-	[thing accept:v]; 
-	
-	NSUInteger code = [v statusCode];
-	if(code != kCopierStatusOK) {
-		NSString* message = [v statusMessage];
-		LOG_ERROR(@"ERROR OCCURED WHILE COPYING: CODE=0x%04x. Aborting operation!\n%@", (int)code, message);
+	if (m_copier) {
+		TOVCopier* v = m_copier;
 
-		NSArray* keys = [NSArray arrayWithObjects:@"message", @"code", nil];
-		NSArray* objects = [NSArray arrayWithObjects:message, [NSNumber numberWithUnsignedInt:code], nil];
-		NSDictionary* dict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];	
-		[self sendResponse:dict forKey:@"transfer-alert"];
-		return;
+		[thing accept:v];
+		
+		NSUInteger code = [v statusCode];
+		if(code != kCopierStatusOK) {
+			NSString* message = [v statusMessage];
+			LOG_ERROR(@"ERROR OCCURED WHILE COPYING: CODE=0x%04x. Aborting operation!\n%@", (int)code, message);
+			
+			NSArray* keys = [NSArray arrayWithObjects:@"message", @"code", nil];
+			NSArray* objects = [NSArray arrayWithObjects:message, [NSNumber numberWithUnsignedInt:code], nil];
+			NSDictionary* dict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+			[self sendResponse:dict forKey:@"transfer-alert"];
+			return;
+		}
+
+		bytesTransfered = [v bytesCopied];
 	}
-#endif
+
+	if (_visitorMove) {
+		NCMoveVisitor* v = _visitorMove;
+		
+		[thing accept:v];
+		
+//		NSUInteger code = [v statusCode];
+//		if(code != kCopierStatusOK) {
+//			NSString* message = [v statusMessage];
+//			LOG_ERROR(@"ERROR OCCURED WHILE COPYING: CODE=0x%04x. Aborting operation!\n%@", (int)code, message);
+//			
+//			NSArray* keys = [NSArray arrayWithObjects:@"message", @"code", nil];
+//			NSArray* objects = [NSArray arrayWithObjects:message, [NSNumber numberWithUnsignedInt:code], nil];
+//			NSDictionary* dict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+//			[self sendResponse:dict forKey:@"transfer-alert"];
+//			return;
+//		}
+
+		bytesTransfered = 0;
+	}
 
 
     /*
@@ -298,7 +316,7 @@
 		m_elapsed_limit_triggers_progress = elapsed + 0.1; // 10 times per second
 
 
-		unsigned long long bytes = [v bytesCopied];
+		unsigned long long bytes = bytesTransfered;
 
 		/*
 		progress is computed as 80% of the amount of bytes transfered so far
@@ -345,7 +363,7 @@
 		uint64_t t_stop = mach_absolute_time();
 		double elapsed = subtract_times(t_stop, m_start_time);
 
-		unsigned long long bytes = [v bytesCopied];
+		unsigned long long bytes = bytesTransfered;
 
 		double bytes_per_second = 0;
 		if(elapsed > 0.1) bytes_per_second = bytes / elapsed;
