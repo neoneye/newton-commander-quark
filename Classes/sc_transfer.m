@@ -204,29 +204,6 @@
 	}
 	
 	
-#if 0
-	if(m_is_move) {
-		/*
-		TODO: Implement the "MOVE" operation within the TransferOperationThread class
-	    I'm always too tired to code it.. but this time I think I have made all the 
-		necessary preparations, so hopefully it's just to code it? (hopes for the best)
-		*/
-		LOG_ERROR(@"not yet implemented");
-
-		float progress = 0.5;              
-		float bytes_per_second = 0.842;
-		float time_remaining = 10.3;
-		unsigned long long bytes = 500;
-		unsigned long long bytes_total = 1000;
-
-		NSArray* keys = [NSArray arrayWithObjects:@"progress", @"bytes", @"bytes_total", @"bytes_per_second", @"time_remaining", nil];
-		NSArray* objects = [NSArray arrayWithObjects:[NSNumber numberWithFloat:progress], [NSNumber numberWithUnsignedLongLong:bytes], [NSNumber numberWithUnsignedLongLong:bytes_total], [NSNumber numberWithDouble:bytes_per_second], [NSNumber numberWithDouble:time_remaining], nil];
-		NSDictionary* dict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];	
-		[self sendResponse:dict forKey:@"transfer-progress"];
-		return;
-	}
-#endif
-
 	NSUInteger n_completed = [m_queue_completed count];
 	NSUInteger n_total = n_pending + n_completed;
 
