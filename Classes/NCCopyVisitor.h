@@ -30,10 +30,5 @@ enum {
 
 +(NCCopyVisitor*)visitorWithSourcePath:(NSString*)sourcePath targetPath:(NSString*)targetPath;
 
-
--(void)setStatus:(NSUInteger)status posixError:(int)error_code message:(NSString*)message, ...;
-
 -(NSString*)result;
-
--(NSString*)convert:(NSString*)path;
 @end
