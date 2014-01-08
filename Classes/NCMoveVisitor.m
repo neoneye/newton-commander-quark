@@ -58,7 +58,7 @@
 -(void)visitDirPre:(TODirPre*)obj {
 	const char* target_path = [[self convert:[obj path]] fileSystemRepresentation];
 	const char* source_path = [[obj path] fileSystemRepresentation];
-	if(!rename(source_path, target_path)) {
+	if(rename(source_path, target_path)) {
 		LOG_ERROR(@"could not move dir %@ -> %@", source_path, target_path);
 		[self setStatus:NCMoveVisitorStatusUnknownDir posixError:errno
 				message:@"dir %s", target_path];
@@ -72,7 +72,7 @@
 -(void)visitFile:(TOFile*)obj {
 	const char* target_path = [[self convert:[obj path]] fileSystemRepresentation];
 	const char* source_path = [[obj path] fileSystemRepresentation];
-	if(!rename(source_path, target_path)) {
+	if(rename(source_path, target_path)) {
 		LOG_ERROR(@"could not move file %@ -> %@", source_path, target_path);
 		[self setStatus:NCMoveVisitorStatusUnknownFile posixError:errno
 				message:@"file %s", target_path];
@@ -82,7 +82,7 @@
 -(void)visitHardlink:(TOHardlink*)obj {
 	const char* target_path = [[self convert:[obj path]] fileSystemRepresentation];
 	const char* source_path = [[obj path] fileSystemRepresentation];
-	if(!rename(source_path, target_path)) {
+	if(rename(source_path, target_path)) {
 		LOG_ERROR(@"could not move hardlink %@ -> %@", source_path, target_path);
 		[self setStatus:NCMoveVisitorStatusUnknownHardlink posixError:errno
 				message:@"hardlink %s", target_path];
@@ -92,7 +92,7 @@
 -(void)visitSymlink:(TOSymlink*)obj {
 	const char* target_path = [[self convert:[obj path]] fileSystemRepresentation];
 	const char* source_path = [[obj path] fileSystemRepresentation];
-	if(!rename(source_path, target_path)) {
+	if(rename(source_path, target_path)) {
 		LOG_ERROR(@"could not move symlink %@ -> %@", source_path, target_path);
 		[self setStatus:NCMoveVisitorStatusUnknownSymlink posixError:errno
 				message:@"symlink %s", target_path];
@@ -102,7 +102,7 @@
 -(void)visitFifo:(TOFifo*)obj {
 	const char* target_path = [[self convert:[obj path]] fileSystemRepresentation];
 	const char* source_path = [[obj path] fileSystemRepresentation];
-	if(!rename(source_path, target_path)) {
+	if(rename(source_path, target_path)) {
 		LOG_ERROR(@"could not move symlink %@ -> %@", source_path, target_path);
 		[self setStatus:NCMoveVisitorStatusUnknownFifo posixError:errno
 				message:@"fifo %s", target_path];
@@ -112,7 +112,7 @@
 -(void)visitChar:(TOChar*)obj {
 	const char* target_path = [[self convert:[obj path]] fileSystemRepresentation];
 	const char* source_path = [[obj path] fileSystemRepresentation];
-	if(!rename(source_path, target_path)) {
+	if(rename(source_path, target_path)) {
 		LOG_ERROR(@"could not move char-device %@ -> %@", source_path, target_path);
 		[self setStatus:NCMoveVisitorStatusUnknownChar posixError:errno
 				message:@"char %s", target_path];
@@ -122,7 +122,7 @@
 -(void)visitBlock:(TOBlock*)obj {
 	const char* target_path = [[self convert:[obj path]] fileSystemRepresentation];
 	const char* source_path = [[obj path] fileSystemRepresentation];
-	if(!rename(source_path, target_path)) {
+	if(rename(source_path, target_path)) {
 		LOG_ERROR(@"could not move block-device %@ -> %@", source_path, target_path);
 		[self setStatus:NCMoveVisitorStatusUnknownBlock posixError:errno
 				message:@"block %s", target_path];

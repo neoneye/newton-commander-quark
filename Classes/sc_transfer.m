@@ -259,9 +259,10 @@
 	*/
 	if([thing isKindOfClass:[TOProgressBefore class]]) {
 		TOProgressBefore* to = (TOProgressBefore*)thing;
-
+		
+		NSString *message = m_is_move ? @"Moving…" : @"Copying…";
 		NSArray* keys = [NSArray arrayWithObjects:@"name", @"message", nil];
-		NSArray* objects = [NSArray arrayWithObjects:[to name], @"Copying…", nil];
+		NSArray* objects = [NSArray arrayWithObjects:[to name], message, nil];
 		NSDictionary* dict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];	
 		[self sendResponse:dict forKey:@"transfer-progress-item"];
 	} else
