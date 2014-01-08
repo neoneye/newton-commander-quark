@@ -599,6 +599,9 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 	NSString* m_status_message;
 }
 
+@property (strong) NSString* sourcePath;
+@property (strong) NSString* targetPath;
+
 @end
 
 @implementation NCCopyVisitor
@@ -608,6 +611,16 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 @synthesize bytesCopied = m_bytes_copied;
 @synthesize statusCode = m_status_code;
 @synthesize statusMessage = m_status_message;
+
+
++(NCCopyVisitor*)visitorWithSourcePath:(NSString*)sourcePath targetPath:(NSString*)targetPath {
+	NSParameterAssert(sourcePath);
+	NSParameterAssert(targetPath);
+	NCCopyVisitor *v = [NCCopyVisitor new];
+	v.sourcePath = sourcePath;
+	v.targetPath = targetPath;
+	return v;
+}
 
 -(id)init {
 	self = [super init];

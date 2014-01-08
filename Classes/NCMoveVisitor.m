@@ -6,7 +6,21 @@
 #import "NCMoveVisitor.h"
 #import "NCLog.h"
 
+@interface NCMoveVisitor ()
+@property (nonatomic, strong) NSString* sourcePath;
+@property (nonatomic, strong) NSString* targetPath;
+@end
+
 @implementation NCMoveVisitor
+
++(NCMoveVisitor*)visitorWithSourcePath:(NSString*)sourcePath targetPath:(NSString*)targetPath {
+	NSParameterAssert(sourcePath);
+	NSParameterAssert(targetPath);
+	NCMoveVisitor *v = [NCMoveVisitor new];
+	v.sourcePath = sourcePath;
+	v.targetPath = targetPath;
+	return v;
+}
 
 -(NSString*)convert:(NSString*)path {
 	if([path hasPrefix:_sourcePath]) {

@@ -8,7 +8,6 @@
 
 @interface NCMoveVisitor : NSObject <TraversalObjectVisitor>
 
-@property (nonatomic, strong) NSString* sourcePath;
-@property (nonatomic, strong) NSString* targetPath;
++(NCMoveVisitor*)visitorWithSourcePath:(NSString*)sourcePath targetPath:(NSString*)targetPath;
 
 @end

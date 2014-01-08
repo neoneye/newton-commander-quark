@@ -182,15 +182,9 @@
 	m_elapsed_limit_triggers_progress = 0;
 	
 	if (m_is_move) {
-		NCMoveVisitor *v = [NCMoveVisitor new];
-		v.sourcePath = m_from_dir;
-		v.targetPath = m_to_dir;
-		self.visitorMove = v;
+		self.visitorMove = [NCMoveVisitor visitorWithSourcePath:m_from_dir targetPath:m_to_dir];
 	} else {
-		NCCopyVisitor* v = [[NCCopyVisitor alloc] init];
-		[v setSourcePath:m_from_dir];
-		[v setTargetPath:m_to_dir];
-		self.visitorCopy = v;
+		self.visitorCopy = [NCCopyVisitor visitorWithSourcePath:m_from_dir targetPath:m_to_dir];
 	}
 
 	[self performSelector: @selector(processNext)

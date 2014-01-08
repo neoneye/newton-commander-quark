@@ -24,11 +24,12 @@ enum {
 
 @interface NCCopyVisitor : NSObject <TraversalObjectVisitor>
 
-@property (strong) NSString* sourcePath;
-@property (strong) NSString* targetPath;
 @property (assign) unsigned long long bytesCopied;
 @property NSUInteger statusCode;
 @property (strong) NSString* statusMessage;
+
++(NCCopyVisitor*)visitorWithSourcePath:(NSString*)sourcePath targetPath:(NSString*)targetPath;
+
 
 -(void)setStatus:(NSUInteger)status posixError:(int)error_code message:(NSString*)message, ...;
 
