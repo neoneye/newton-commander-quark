@@ -1,21 +1,21 @@
 //
-// sc_resource_fork_manager.m
+// NCResourceForkManager.m
 // Newton Commander
 //
 #if ! __has_feature(objc_arc)
 #error This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
-#import "sc_resource_fork_manager.h"
+#import "NCResourceForkManager.h"
 #import <CoreServices/CoreServices.h>
 
-@implementation ResourceForkManager
+@implementation NCResourceForkManager
 
-+(ResourceForkManager*)shared {
-    static ResourceForkManager* shared = nil;
++(NCResourceForkManager*)shared {
+    static NCResourceForkManager* shared = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        shared = [ResourceForkManager new];
+        shared = [NCResourceForkManager new];
     });
     return shared;
 }

@@ -1,12 +1,12 @@
 //
-// sc_resource_fork_manager.h
+// NCResourceForkManager.h
 // Newton Commander
 //
 #include <Foundation/Foundation.h>
 
-@interface ResourceForkManager : NSObject
+@interface NCResourceForkManager : NSObject
 
-+(ResourceForkManager*)shared;
++(NCResourceForkManager*)shared;
 
 -(NSData*)getResourceForkFromFile:(NSString*)path;
 -(void)setResourceFork:(NSData*)data onFile:(NSString*)path;

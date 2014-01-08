@@ -23,7 +23,7 @@ ATTR_CMN_BKUPTIME                   ioFlBkDat    backupDate
 #import "NCLog.h"
 #import "NCFileManager.h"
 #import "NCCopyVisitor.h"
-#import "sc_resource_fork_manager.h"
+#import "NCResourceForkManager.h"
 #import "NCFinderInfoManager.h"
 #include <stdio.h>
 #include <fts.h>
@@ -773,7 +773,7 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 	only FILES have a resource fork. 
 	DIRS/Symlinks/FIFOs/Char/Block doesn't have resource fork.
 	*/
-	[[ResourceForkManager shared] 
+	[[NCResourceForkManager shared] 
 		copyFrom:[obj path] 
 		      to:[self convert:[obj path]]
 	];
