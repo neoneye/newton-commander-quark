@@ -211,9 +211,7 @@
 	id thing = [m_queue_pending objectAtIndex:0];
 	unsigned long long bytesTransfered = 0;
 
-	/*
-	perform the copy operation of this item
-	*/
+	// Copy 1 item - This is where the actual copy happens in the file system.
 	if (_visitorCopy) {
 		NCCopyVisitor* v = _visitorCopy;
 
@@ -234,22 +232,23 @@
 		bytesTransfered = [v bytesCopied];
 	}
 
+	// Move 1 item - This is where the actual move happens in the file system.
 	if (_visitorMove) {
 		NCMoveVisitor* v = _visitorMove;
 		
 		[thing accept:v];
 		
-//		NSUInteger code = [v statusCode];
-//		if(code != kCopierStatusOK) {
-//			NSString* message = [v statusMessage];
-//			LOG_ERROR(@"ERROR OCCURED WHILE COPYING: CODE=0x%04x. Aborting operation!\n%@", (int)code, message);
-//			
-//			NSArray* keys = [NSArray arrayWithObjects:@"message", @"code", nil];
-//			NSArray* objects = [NSArray arrayWithObjects:message, [NSNumber numberWithUnsignedInt:code], nil];
-//			NSDictionary* dict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
-//			[self sendResponse:dict forKey:@"transfer-alert"];
-//			return;
-//		}
+		NCMoveVisitorStatusCode code = [v statusCode];
+		if(code != NCMoveVisitorStatusOK) {
+			NSString* message = [v statusMessage];
+			LOG_ERROR(@"ERROR OCCURED WHILE MOVING: CODE=0x%04x. Aborting operation!\n%@", (int)code, message);
+			
+			NSArray* keys = [NSArray arrayWithObjects:@"message", @"code", nil];
+			NSArray* objects = [NSArray arrayWithObjects:message, [NSNumber numberWithUnsignedInt:(int)code], nil];
+			NSDictionary* dict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
+			[self sendResponse:dict forKey:@"transfer-alert"];
+			return;
+		}
 
 		bytesTransfered = 0;
 	}

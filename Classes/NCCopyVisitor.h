@@ -8,7 +8,7 @@
 typedef enum {
 	NCCopyVisitorStatusOK               = 0x0000,
 
-	// a file or dir already exist at the destination. Do you want to overwrite it?
+	// a file or dir already exist at the destination
 	NCCopyVisitorStatusExist            = 0x0001,
 
 	// some other error occured
