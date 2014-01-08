@@ -1,21 +1,21 @@
 //
-// sc_finder_info_manager.m
+// NCFinderInfoManager.m
 // Newton Commander
 //
 #if ! __has_feature(objc_arc)
 #error This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
-#import "sc_finder_info_manager.h"
+#import "NCFinderInfoManager.h"
 #import <CoreServices/CoreServices.h>
 
-@implementation FinderInfoManager
+@implementation NCFinderInfoManager
 
-+(FinderInfoManager*)shared {
-    static FinderInfoManager *shared = nil;
++(NCFinderInfoManager*)shared {
+    static NCFinderInfoManager *shared = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        shared = [FinderInfoManager new];
+        shared = [NCFinderInfoManager new];
     });
     return shared;
 }

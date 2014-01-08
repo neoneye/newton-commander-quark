@@ -1,12 +1,12 @@
 //
-// sc_finder_info_manager.h
+// NCFinderInfoManager.h
 // Newton Commander
 //
 #include <Foundation/Foundation.h>
 
-@interface FinderInfoManager : NSObject
+@interface NCFinderInfoManager : NSObject
 
-+(FinderInfoManager*)shared;
++(NCFinderInfoManager*)shared;
 
 /*
 ideally we want to copy between filedescriptors, however

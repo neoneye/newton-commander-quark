@@ -24,7 +24,7 @@ ATTR_CMN_BKUPTIME                   ioFlBkDat    backupDate
 #import "NCFileManager.h"
 #import "NCCopyVisitor.h"
 #import "sc_resource_fork_manager.h"
-#import "sc_finder_info_manager.h"
+#import "NCFinderInfoManager.h"
 #include <stdio.h>
 #include <fts.h>
 #include <sys/stat.h>
@@ -679,7 +679,7 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 	const char* source_path = [[obj path] fileSystemRepresentation];
 
 	// copy finder info
-	[[FinderInfoManager shared] 
+	[[NCFinderInfoManager shared] 
 		copyFrom:[obj path] 
 		      to:[self convert:[obj path]]
 	];
@@ -779,7 +779,7 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 	];
 	
 	// copy finder info
-	[[FinderInfoManager shared] 
+	[[NCFinderInfoManager shared] 
 		copyFrom:[obj path] 
 		      to:[self convert:[obj path]]
 	];
