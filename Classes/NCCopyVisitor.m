@@ -598,9 +598,11 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 	NSUInteger m_status_code;
 	NSString* m_status_message;
 }
-
-@property (strong) NSString* sourcePath;
-@property (strong) NSString* targetPath;
+@property (nonatomic, assign) unsigned long long bytesCopied;
+@property (nonatomic, assign) NSUInteger statusCode;
+@property (nonatomic, strong) NSString* statusMessage;
+@property (nonatomic, strong) NSString* sourcePath;
+@property (nonatomic, strong) NSString* targetPath;
 
 @end
 

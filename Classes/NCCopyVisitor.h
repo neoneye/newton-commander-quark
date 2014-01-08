@@ -24,9 +24,9 @@ enum {
 
 @interface NCCopyVisitor : NSObject <TraversalObjectVisitor>
 
-@property (assign) unsigned long long bytesCopied;
-@property NSUInteger statusCode;
-@property (strong) NSString* statusMessage;
+@property (nonatomic, readonly) unsigned long long bytesCopied;
+@property (nonatomic, readonly) NSUInteger statusCode;
+@property (nonatomic, readonly) NSString* statusMessage;
 
 +(NCCopyVisitor*)visitorWithSourcePath:(NSString*)sourcePath targetPath:(NSString*)targetPath;
 
