@@ -9,9 +9,6 @@
 typedef enum {
 	NCMoveVisitorStatusOK               = 0x0000,
 	
-	// a file or dir already exist at the destination
-	NCMoveVisitorStatusExist            = 0x0001,
-	
 	// some other error occured
 	NCMoveVisitorStatusUnknownDir       = 0x1001,
 	NCMoveVisitorStatusUnknownFile      = 0x1002,
