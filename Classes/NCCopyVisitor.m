@@ -595,11 +595,11 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 	NSString* m_target_path;
 	unsigned long long m_bytes_copied;
 	
-	NSUInteger m_status_code;
+	NCCopyVisitorStatusCode m_status_code;
 	NSString* m_status_message;
 }
 @property (nonatomic, assign) unsigned long long bytesCopied;
-@property (nonatomic, assign) NSUInteger statusCode;
+@property (nonatomic, assign) NCCopyVisitorStatusCode statusCode;
 @property (nonatomic, strong) NSString* statusMessage;
 @property (nonatomic, strong) NSString* sourcePath;
 @property (nonatomic, strong) NSString* targetPath;
@@ -627,13 +627,13 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 -(id)init {
 	self = [super init];
     if(self) {
-		m_status_code = kCopierStatusOK;
+		m_status_code = NCCopyVisitorStatusOK;
     }
     return self;
 }
 
 -(NSString*)result {
-	if(m_status_code != kCopierStatusOK) {
+	if(m_status_code != NCCopyVisitorStatusOK) {
 		return [NSString stringWithFormat:@"ERROR:%i", (int)m_status_code];
 	}
 	return @"OK";
@@ -647,7 +647,7 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 	return path;
 }
 
--(void)setStatus:(NSUInteger)status posixError:(int)error_code message:(NSString*)message, ... {
+-(void)setStatus:(NCCopyVisitorStatusCode)status posixError:(int)error_code message:(NSString*)message, ... {
 	va_list ap;
 	va_start(ap,message);
 	NSString* message2 = [[NSString alloc] initWithFormat:message arguments:ap];
@@ -665,11 +665,11 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 	const char* target_path = [[self convert:[obj path]] fileSystemRepresentation];
 	if(mkdir(target_path, 0700) < 0) {
 		if(errno == EEXIST) {
-			[self setStatus:kCopierStatusExist posixError:errno 
+			[self setStatus:NCCopyVisitorStatusExist posixError:errno 
 				message:@"mkdir %s", target_path];
 			return;
 		}
-		[self setStatus:kCopierStatusUnknownDir posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownDir posixError:errno 
 			message:@"mkdir %s", target_path];
 	}
 }
@@ -686,20 +686,20 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 
 	int from_fd = open(source_path, O_DIRECTORY);
 	if(from_fd < 0) {
-		[self setStatus:kCopierStatusUnknownDir posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownDir posixError:errno 
 			message:@"open source dir %s", source_path];
 		return;
 	}
 	struct stat from_st;
 	if(fstat(from_fd, &from_st) < 0) {
-		[self setStatus:kCopierStatusUnknownDir posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownDir posixError:errno 
 			message:@"stat source dir %s", source_path];
 		// TODO: close file descriptors
 		return;
 	}
 	int to_fd = open(target_path, O_DIRECTORY);
 	if(to_fd < 0) {
-		[self setStatus:kCopierStatusUnknownDir posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownDir posixError:errno 
 			message:@"open target dir %s", target_path];
 		// TODO: close file descriptors
 		return;
@@ -723,7 +723,7 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 		*/
 		struct stat to_st;
 		if(lstat(target_path, &to_st) == 0) {
-			[self setStatus:kCopierStatusExist posixError:EEXIST 
+			[self setStatus:NCCopyVisitorStatusExist posixError:EEXIST 
 				message:@"stat target file %s", target_path];
 			return;
 		}
@@ -738,14 +738,14 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 		do {
 			fd0 = open(source_path, O_RDONLY, 0);
 			if(fd0 == -1) {
-				[self setStatus:kCopierStatusUnknownFile posixError:errno 
+				[self setStatus:NCCopyVisitorStatusUnknownFile posixError:errno 
 					message:@"open source file %s", source_path];
 				break;
 			}
 
 			fd1 = open(target_path, O_CREAT | O_WRONLY, 0700);
 			if(fd1 == -1) {
-				[self setStatus:kCopierStatusUnknownFile posixError:errno 
+				[self setStatus:NCCopyVisitorStatusUnknownFile posixError:errno 
 					message:@"open target file %s", target_path];
 				break;
 			}
@@ -755,7 +755,7 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 		if(fd0 >= 0) { close(fd0); }
 		if(fd1 >= 0) { close(fd1); }
 		
-		if(m_status_code != kCopierStatusOK) {
+		if(m_status_code != NCCopyVisitorStatusOK) {
 			return;
 		}
 	}
@@ -787,20 +787,20 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 	{
 		int from_fd = open(source_path, O_RDONLY);
 		if(from_fd < 0) {
-			[self setStatus:kCopierStatusUnknownFile posixError:errno 
+			[self setStatus:NCCopyVisitorStatusUnknownFile posixError:errno 
 				message:@"open source file %s", source_path];
 			return;
 		}
 		struct stat from_st;
 		if(fstat(from_fd, &from_st) < 0) {
-			[self setStatus:kCopierStatusUnknownFile posixError:errno 
+			[self setStatus:NCCopyVisitorStatusUnknownFile posixError:errno 
 				message:@"stat source file %s", source_path];
 			// TODO: close file descriptors
 			return;
 		}
 		int to_fd = open(target_path, O_WRONLY);
 		if(to_fd < 0) {
-			[self setStatus:kCopierStatusUnknownFile posixError:errno 
+			[self setStatus:NCCopyVisitorStatusUnknownFile posixError:errno 
 				message:@"stat target file %s", target_path];
 			// TODO: close file descriptors
 			return;
@@ -821,7 +821,7 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 	const char* link_path = [[self convert:[obj linkPath]] fileSystemRepresentation];
 	const char* target_path = [[self convert:[obj path]] fileSystemRepresentation];
 	if(link(link_path, target_path) < 0) {
-		[self setStatus:kCopierStatusUnknownHardlink posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownHardlink posixError:errno 
 			message:@"hardlink %s %s", link_path, target_path];
 	}
 }
@@ -831,27 +831,27 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 	const char* target_path = [[self convert:[obj path]] fileSystemRepresentation];
 	const char* source_path = [[obj path] fileSystemRepresentation];
 	if(symlink(link_path, target_path) < 0) {
-		[self setStatus:kCopierStatusUnknownSymlink posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownSymlink posixError:errno 
 			message:@"symlink %s %s", link_path, target_path];
 		return;
 	}
 
 	int from_fd = open(source_path, O_SYMLINK);
 	if(from_fd < 0) {
-		[self setStatus:kCopierStatusUnknownSymlink posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownSymlink posixError:errno 
 			message:@"open source symlink %s", source_path];
 		return;
 	}
 	struct stat from_st;
 	if(fstat(from_fd, &from_st) < 0) {
-		[self setStatus:kCopierStatusUnknownSymlink posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownSymlink posixError:errno 
 			message:@"stat source symlink %s", source_path];
 		// TODO: close file descriptors
 		return;
 	}
 	int to_fd = open(target_path, O_SYMLINK);
 	if(to_fd < 0) {
-		[self setStatus:kCopierStatusUnknownSymlink posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownSymlink posixError:errno 
 			message:@"open target symlink %s", target_path];
 		// TODO: close file descriptors
 		return;
@@ -867,27 +867,27 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 	const char* target_path = [[self convert:[obj path]] fileSystemRepresentation];
 	const char* source_path = [[obj path] fileSystemRepresentation];
 	if(mkfifo(target_path, 0700) < 0) {
-		[self setStatus:kCopierStatusUnknownFifo posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownFifo posixError:errno 
 			message:@"mkfifo %s", target_path];
 		return;
 	}
 
 	int from_fd = open(source_path, O_RDONLY | O_NONBLOCK);
 	if(from_fd < 0) {
-		[self setStatus:kCopierStatusUnknownFifo posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownFifo posixError:errno 
 			message:@"open source fifo %s", source_path];
 		return;
 	}
 	struct stat from_st;
 	if(fstat(from_fd, &from_st) < 0) {
-		[self setStatus:kCopierStatusUnknownFifo posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownFifo posixError:errno 
 			message:@"stat source fifo %s", source_path];
 		// TODO: close file descriptors
 		return;
 	}
 	int to_fd = open(target_path, O_WRONLY | O_NONBLOCK);
 	if(to_fd < 0) {
-		[self setStatus:kCopierStatusUnknownFifo posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownFifo posixError:errno 
 			message:@"open target fifo %s", target_path];
 		// TODO: close file descriptors
 		return;
@@ -906,32 +906,32 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 	const char* source_path = [[obj path] fileSystemRepresentation];
 	struct stat st;
 	if(stat(source_path, &st) < 0) {
-		[self setStatus:kCopierStatusUnknownChar posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownChar posixError:errno 
 			message:@"stat source char %s", source_path];
 		return;
 	}
 	if(mknod(target_path, st.st_mode, st.st_rdev) < 0) {
-		[self setStatus:kCopierStatusUnknownChar posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownChar posixError:errno 
 			message:@"mknod char %s", target_path];
 		return;
 	}
 
 	int from_fd = open(source_path, O_RDONLY);
 	if(from_fd < 0) {
-		[self setStatus:kCopierStatusUnknownChar posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownChar posixError:errno 
 			message:@"open source char %s", source_path];
 		return;
 	}
 	struct stat from_st;
 	if(fstat(from_fd, &from_st) < 0) {
-		[self setStatus:kCopierStatusUnknownChar posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownChar posixError:errno 
 			message:@"stat source char %s", source_path];
 		// TODO: close file descriptors
 		return;
 	}
 	int to_fd = open(target_path, O_WRONLY);
 	if(to_fd < 0) {
-		[self setStatus:kCopierStatusUnknownChar posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownChar posixError:errno 
 			message:@"open target char %s", target_path];
 		// TODO: close file descriptors
 		return;
@@ -949,32 +949,32 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 	const char* source_path = [[obj path] fileSystemRepresentation];
 	struct stat st;
 	if(stat(source_path, &st) < 0) {
-		[self setStatus:kCopierStatusUnknownBlock posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownBlock posixError:errno 
 			message:@"stat source block %s", source_path];
 		return;
 	}
 	if(mknod(target_path, st.st_mode, st.st_rdev) < 0) {
-		[self setStatus:kCopierStatusUnknownBlock posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownBlock posixError:errno 
 			message:@"mknod block %s", target_path];
 		return;
 	}
 
 	int from_fd = open(source_path, O_RDONLY);
 	if(from_fd < 0) {
-		[self setStatus:kCopierStatusUnknownBlock posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownBlock posixError:errno 
 			message:@"open source block %s", source_path];
 		return;
 	}
 	struct stat from_st;
 	if(fstat(from_fd, &from_st) < 0) {
-		[self setStatus:kCopierStatusUnknownBlock posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownBlock posixError:errno 
 			message:@"stat source block %s", source_path];
 		// TODO: close file descriptors
 		return;
 	}
 	int to_fd = open(target_path, O_WRONLY);
 	if(to_fd < 0) {
-		[self setStatus:kCopierStatusUnknownBlock posixError:errno 
+		[self setStatus:NCCopyVisitorStatusUnknownBlock posixError:errno 
 			message:@"open target block %s", target_path];
 		// TODO: close file descriptors
 		return;
@@ -994,7 +994,7 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
 	Newton Commander - Error - Socket or Other filetype encountered.
 	*/
 	NSString* s = [self convert:[obj path]];
-	[self setStatus:kCopierStatusUnknownOther posixError:0 
+	[self setStatus:NCCopyVisitorStatusUnknownOther posixError:0 
 		message:@"Unknown file-type at path %@", s];
 }
 

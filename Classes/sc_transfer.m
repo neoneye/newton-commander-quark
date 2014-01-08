@@ -219,13 +219,13 @@
 
 		[thing accept:v];
 		
-		NSUInteger code = [v statusCode];
-		if(code != kCopierStatusOK) {
+		NCCopyVisitorStatusCode code = [v statusCode];
+		if(code != NCCopyVisitorStatusOK) {
 			NSString* message = [v statusMessage];
 			LOG_ERROR(@"ERROR OCCURED WHILE COPYING: CODE=0x%04x. Aborting operation!\n%@", (int)code, message);
 			
 			NSArray* keys = [NSArray arrayWithObjects:@"message", @"code", nil];
-			NSArray* objects = [NSArray arrayWithObjects:message, [NSNumber numberWithUnsignedInt:code], nil];
+			NSArray* objects = [NSArray arrayWithObjects:message, [NSNumber numberWithUnsignedInt:(int)code], nil];
 			NSDictionary* dict = [NSDictionary dictionaryWithObjects:objects forKeys:keys];
 			[self sendResponse:dict forKey:@"transfer-alert"];
 			return;
