@@ -30,5 +30,4 @@ typedef enum {
 
 +(NCCopyVisitor*)visitorWithSourcePath:(NSString*)sourcePath targetPath:(NSString*)targetPath;
 
--(NSString*)result;
 @end

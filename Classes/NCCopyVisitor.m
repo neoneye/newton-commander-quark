@@ -632,13 +632,6 @@ void nc_copyfile_fd(const struct stat *from_st, int from_fd, int to_fd, int flag
     return self;
 }
 
--(NSString*)result {
-	if(m_status_code != NCCopyVisitorStatusOK) {
-		return [NSString stringWithFormat:@"ERROR:%i", (int)m_status_code];
-	}
-	return @"OK";
-}
-
 -(NSString*)convert:(NSString*)path {
 	if([path hasPrefix:m_source_path]) {
 		NSString* s = [path substringFromIndex:[m_source_path length]];
