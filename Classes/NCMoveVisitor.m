@@ -6,6 +6,7 @@
 #import "NCMoveVisitor.h"
 #import "NCLog.h"
 #import "NCFileManager.h"
+#include <sys/stat.h>
 
 @interface NCMoveVisitor ()
 @property (nonatomic, assign) NCMoveVisitorStatusCode statusCode;
@@ -55,13 +56,40 @@
 	_statusMessage = status_message;
 }
 
--(void)visitDirPre:(TODirPre*)obj {
-	const char* target_path = [[self convert:[obj path]] fileSystemRepresentation];
-	const char* source_path = [[obj path] fileSystemRepresentation];
-	if(rename(source_path, target_path)) {
-		[self setStatus:NCMoveVisitorStatusUnknownDir posixError:errno
-				message:@"dir %s", target_path];
+-(void)renameType:(NSString*)type itemPath:(NSString*)itemPath {
+	const char* source_path = [itemPath fileSystemRepresentation];
+	const char* target_path = [[self convert:itemPath] fileSystemRepresentation];
+
+	// check if source exist
+	{
+		struct stat sb;
+		if (lstat(source_path, &sb) == -1) {
+			[self setStatus:NCMoveVisitorStatusSourceDoesNotExist posixError:ENOENT
+					message:@"%@ %s %s", type, source_path, target_path];
+			return;
+		}
 	}
+
+	// check if no dest already exist
+	{
+		struct stat sb;
+		if (!stat(target_path, &sb)) {
+			[self setStatus:NCMoveVisitorStatusDestDoesExist posixError:EEXIST
+					message:@"%@ %s %s", type, source_path, target_path];
+			return;
+		}
+		
+	}
+	
+	// move it
+	if(rename(source_path, target_path)) {
+		[self setStatus:NCMoveVisitorStatusRenamedFailed posixError:errno
+				message:@"%@ %s %s", type, source_path, target_path];
+	}
+}
+
+-(void)visitDirPre:(TODirPre*)obj {
+	[self renameType:@"dir" itemPath:obj.path];
 }
 
 -(void)visitDirPost:(TODirPost*)obj {
@@ -69,65 +97,31 @@
 }
 
 -(void)visitFile:(TOFile*)obj {
-	const char* target_path = [[self convert:[obj path]] fileSystemRepresentation];
-	const char* source_path = [[obj path] fileSystemRepresentation];
-	if(rename(source_path, target_path)) {
-		[self setStatus:NCMoveVisitorStatusUnknownFile posixError:errno
-				message:@"file %s", target_path];
-	}
+	[self renameType:@"file" itemPath:obj.path];
 }
 
 -(void)visitHardlink:(TOHardlink*)obj {
-	const char* target_path = [[self convert:[obj path]] fileSystemRepresentation];
-	const char* source_path = [[obj path] fileSystemRepresentation];
-	if(rename(source_path, target_path)) {
-		[self setStatus:NCMoveVisitorStatusUnknownHardlink posixError:errno
-				message:@"hardlink %s", target_path];
-	}
+	[self renameType:@"hardlink" itemPath:obj.path];
 }
 
 -(void)visitSymlink:(TOSymlink*)obj {
-	const char* target_path = [[self convert:[obj path]] fileSystemRepresentation];
-	const char* source_path = [[obj path] fileSystemRepresentation];
-	if(rename(source_path, target_path)) {
-		[self setStatus:NCMoveVisitorStatusUnknownSymlink posixError:errno
-				message:@"symlink %s", target_path];
-	}
+	[self renameType:@"symlink" itemPath:obj.path];
 }
 
 -(void)visitFifo:(TOFifo*)obj {
-	const char* target_path = [[self convert:[obj path]] fileSystemRepresentation];
-	const char* source_path = [[obj path] fileSystemRepresentation];
-	if(rename(source_path, target_path)) {
-		[self setStatus:NCMoveVisitorStatusUnknownFifo posixError:errno
-				message:@"fifo %s", target_path];
-	}
+	[self renameType:@"fifo" itemPath:obj.path];
 }
 
 -(void)visitChar:(TOChar*)obj {
-	const char* target_path = [[self convert:[obj path]] fileSystemRepresentation];
-	const char* source_path = [[obj path] fileSystemRepresentation];
-	if(rename(source_path, target_path)) {
-		[self setStatus:NCMoveVisitorStatusUnknownChar posixError:errno
-				message:@"char %s", target_path];
-	}
+	[self renameType:@"char" itemPath:obj.path];
 }
 
 -(void)visitBlock:(TOBlock*)obj {
-	const char* target_path = [[self convert:[obj path]] fileSystemRepresentation];
-	const char* source_path = [[obj path] fileSystemRepresentation];
-	if(rename(source_path, target_path)) {
-		[self setStatus:NCMoveVisitorStatusUnknownBlock posixError:errno
-				message:@"block %s", target_path];
-	}
+	[self renameType:@"block" itemPath:obj.path];
 }
 
 -(void)visitOther:(TOOther*)obj {
-	// socket and whiteout is not something that we can copy
-	const char* target_path = [[self convert:[obj path]] fileSystemRepresentation];
-	const char* source_path = [[obj path] fileSystemRepresentation];
-	[self setStatus:NCMoveVisitorStatusUnknownOther posixError:errno
-			message:@"other %s", target_path];
+	[self renameType:@"other" itemPath:obj.path];
 }
 
 -(void)visitProgressBefore:(TOProgressBefore*)obj {
