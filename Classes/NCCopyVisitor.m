@@ -69,6 +69,7 @@ void copy_time2(const char* from_path, const char* to_path) {
 
 /*
 copy xattr between filedescriptors
+IDEA: Perhaps use fcopyfile() with COPYFILE_XATTR option
 */
 void copy_xattr_fd(int from_fd, int to_fd) {
 	int options = XATTR_SHOWCOMPRESSION;
@@ -150,7 +151,10 @@ if( err == noErr )
 
 */
 int copy_data_fd(int read_fd, int write_fd, unsigned long long* result_bytes_copied) {
+	// TODO: use sourcefile_lstat->st_blksize as our buffer_size
 	const unsigned int buffer_size = 4096;
+	
+	// TODO: allocate the buffer like this malloc((size_t)sourcefile_lstat->st_blksize)
 	char buffer[buffer_size];
 
 	if(result_bytes_copied) {
@@ -495,6 +499,7 @@ void copy_flags_fd(const struct stat *from_st, int to_fd) {
 
 /*
 copy ACL between filedescriptors
+IDEA: Perhaps use fcopyfile() with COPYFILE_ACL option
 */
 void copy_acl_fd(int from_fd, int to_fd) {
 	acl_t acl = acl_get_fd_np(from_fd, ACL_TYPE_EXTENDED);
