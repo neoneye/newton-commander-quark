@@ -1414,7 +1414,13 @@ TODO: obtain it all!
 -(void)dumpNSFileManager {
 	NSFileManager* fm = [NSFileManager defaultManager];
 	
-	NSDictionary* fileAttributes = [fm fileAttributesAtPath:m_path traverseLink:YES];
+	NSError *error = NULL;
+	NSDictionary* fileAttributes = [fm attributesOfItemAtPath:m_path error:&error];
+	if (error) {
+		LOG_ERROR(@"could not get attributesOfItemAtPath %@\n%@", m_path, error);
+		return;
+	}
+	
 	if(m_debug) NSLog(@"fileAttributesAtPath: %@", fileAttributes);
 
 	if(m_append_to_result) {
