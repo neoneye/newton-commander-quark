@@ -282,6 +282,7 @@ uuid_to_name(uuid_t *uu)
 	if(m_debug_sections) { NSLog(@"section: readlink"); }
 	[self dumpReadlink];
 	[self dumpAlias];
+	[self dumpAlias1];
 
 	/*
 	dump the stat struct
@@ -395,6 +396,76 @@ uuid_to_name(uuid_t *uu)
 	}
 }
 
+-(void)dumpAlias1 {
+	Boolean notFound=YES;
+
+	const char *cpath = [m_path fileSystemRepresentation];
+	
+	
+	size_t slen, max_path = (size_t) pathconf(".",_PC_PATH_MAX) ;
+	if ((slen = strlen(cpath)) >= max_path) {
+		LOG_ERROR(@"path is too long");
+		return;
+	}
+	char *orig_path=CFAllocatorAllocate(CFAllocatorGetDefault(), slen+1, 0);
+	orig_path=strcpy(orig_path, cpath);
+	
+	CFStringRef pstr = CFStringCreateWithCStringNoCopy(NULL, orig_path,
+													   kCFStringEncodingUTF8, kCFAllocatorNull);
+	
+	CFURLRef url = CFURLCreateWithFileSystemPath( kCFAllocatorDefault,
+												 (CFStringRef)pstr,
+												 kCFURLPOSIXPathStyle, FALSE);
+	if (url != NULL) {
+		CFBooleanRef isalias=kCFBooleanFalse ;
+		CFErrorRef err=noErr ;
+		if ( CFURLCopyResourcePropertyForKey ( url,kCFURLIsAliasFileKey , &isalias, &err)) {
+			
+			if (isalias == kCFBooleanTrue && err == noErr) {
+				
+				Boolean isStale=NO;
+				CFDataRef bkMrk = CFURLCreateBookmarkDataFromFile(kCFAllocatorDefault , url, &err );
+				
+				CFURLRef resolvedUrl = NULL ;
+				if ( err == noErr ) {
+					resolvedUrl =CFURLCreateByResolvingBookmarkData(kCFAllocatorDefault, bkMrk,
+																	(CFURLBookmarkResolutionOptions)0, NULL, NULL, &isStale, &err) ;
+				}
+				
+				if (resolvedUrl) {
+					NSURL* url = (__bridge NSURL *)resolvedUrl;
+
+					[self appendText:@"alias: "];
+					[self appendValue:[NSString stringWithFormat:@"%@", url]];
+					[self appendText:@"\n"];
+				}
+				
+				CFRelease(bkMrk) ;
+				if (err == noErr && isalias == kCFBooleanTrue && resolvedUrl != NULL ) {
+					
+					if (isStale == YES )
+						goto cleanup ;
+					else if (resolvedUrl != NULL) {
+						uint8_t *buf = calloc(max_path+1,1) ;
+						Boolean oktrans =CFURLGetFileSystemRepresentation(resolvedUrl, YES, buf,max_path) ;
+						
+						if (oktrans ) {
+							fprintf(stdout,"%s\n",(char *)buf) ;
+							notFound=NO;
+							free(buf) ;
+						} 
+						CFRelease(resolvedUrl);
+					}
+				}
+				CFRelease(url);
+			}
+		}
+	} 
+cleanup:
+	CFRelease(pstr) ;
+}
+
+
 -(void)dumpAlias {
 
 	FSRef ref;
@@ -441,7 +512,6 @@ uuid_to_name(uuid_t *uu)
 	[self appendText:@" refers to "];
 	[self appendValue:target_path];
 	[self appendText:@"\n"];
-	
 }
 
 -(void)statDev {	
