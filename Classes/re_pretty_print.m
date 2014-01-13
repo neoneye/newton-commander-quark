@@ -975,27 +975,27 @@ uuid_to_name(uuid_t *uu)
 }
 
 
-- (BOOL)getFSRef:(FSRef *)aFsRef
-{
-	NSURL* url = [NSURL fileURLWithPath:m_path];
-	// NSLog(@"%s url=%@", _cmd, url);
-	return CFURLGetFSRef( (CFURLRef)url, aFsRef ) != 0;
-}
-
-- (BOOL)getFSSpec:(FSSpec *)aFSSpec
-{
-	FSRef			aFSRef;
-
-	return [self getFSRef:&aFSRef] && (FSGetCatalogInfo( &aFSRef, kFSCatInfoNone, NULL, NULL, aFSSpec, NULL ) == noErr);
-}
+//- (BOOL)getFSRef:(FSRef *)aFsRef
+//{
+//	NSURL* url = [NSURL fileURLWithPath:m_path];
+//	// NSLog(@"%s url=%@", _cmd, url);
+//	return CFURLGetFSRef( (CFURLRef)url, aFsRef ) != 0;
+//}
+//
+//- (BOOL)getFSSpec:(FSSpec *)aFSSpec
+//{
+//	FSRef			aFSRef;
+//
+//	return [self getFSRef:&aFSRef] && (FSGetCatalogInfo( &aFSRef, kFSCatInfoNone, NULL, NULL, aFSSpec, NULL ) == noErr);
+//}
 
 - (BOOL)finderInfo:(FInfo*)theInfo {
 	/*
 	we really shouldn't use FSSpec.. but instead use FSRef
 	http://www.cocoadev.com/index.pl?FinderFlags
 	*/
-	FSSpec theFSSpec;
-	if( [self getFSSpec:&theFSSpec] == NO) return NO;
+//	FSSpec theFSSpec;
+//	if( [self getFSSpec:&theFSSpec] == NO) return NO;
 	return NO;
 	// TODO: use FSGetCatalogInfo() or FSGetFinderInfo() instead of FSpGetFInfo()
 //	return (FSpGetFInfo( &theFSSpec, theInfo) == noErr );
