@@ -20,7 +20,7 @@ that I have no clue how to obtain.
 TODO: obtain more info using getattrlist()
 
 *********************************************************************/
-#include "re_pretty_print.h"
+#import "re_pretty_print.h"
 
 #include <sys/acl.h>
 #include <sys/attr.h>
@@ -32,6 +32,7 @@ TODO: obtain more info using getattrlist()
 #include <time.h>
 #include <membership.h>
 #include <Carbon/Carbon.h>
+#import "NCLog.h"
 
 
 /*
@@ -47,12 +48,6 @@ struct AttrBuffer {
 	off_t file_rsrc_allocsize;
 } __attribute__((packed));
 
-
-/*
-this one must be defined in membershipPriv.h, that I don't have access to.
-So 400 bytes is just a guess
-*/
-#define MAXLOGNAME 400
 
 
 /*
@@ -171,34 +166,6 @@ uuid_to_name(uuid_t *uu)
 	NSDictionary* m_attr4;
 }
 
-
--(void)appendStatDevId:(NSString*)stdev devname:(NSString*)devname;
-
-
--(void)dumpReadlink;
--(void)dumpAlias;
--(void)statDev;
--(void)statMode;
--(void)statLinks;
--(void)statNode;  
--(void)statUser;
--(void)statGroup;
--(void)statRDev;
--(void)statTime;
--(void)statSizeAndStuff;
--(void)dumpFinderInfo;
--(void)dumpAttr;
--(void)dumpXattr;
--(void)dumpACL;
--(void)dumpNSFileManager;
-
-
-- (BOOL)getFSRef:(FSRef *)aFsRef;
-- (BOOL)getFSSpec:(FSSpec *)aFSSpec;
-
-- (BOOL)finderInfoFlags:(UInt16*)aFlags type:(OSType*)aType creator:(OSType*)aCreator;
-
--(void)dumpSpotlightInfo;
 @end
 
 @implementation REPrettyPrint
@@ -303,8 +270,6 @@ uuid_to_name(uuid_t *uu)
 }
 
 -(void)obtain {
-	if(m_debug) NSLog(@"%s", _cmd);
-
 	m_append_to_result = YES;
 	[m_result deleteCharactersInRange:NSMakeRange(0, [m_result length])];
 	[m_result beginEditing];
@@ -319,13 +284,13 @@ uuid_to_name(uuid_t *uu)
 	[self dumpAlias];
 
 	/*
-	dump the stat64 struct
+	dump the stat struct
 	*/
 	if(m_append_to_result) {
 		[self appendText:@"\n\n"];
-		[self appendHeadlineText:@"stat64 - file status\n"];
+		[self appendHeadlineText:@"stat - file status\n"];
 	}
-	if(m_debug_sections) { NSLog(@"section: stat64"); }
+	if(m_debug_sections) { NSLog(@"section: stat"); }
 	[self statDev];                    
 	[self statMode];
 	[self statLinks];
@@ -387,7 +352,9 @@ uuid_to_name(uuid_t *uu)
 
 	[m_result endEditing];
 
-	if(m_debug) NSLog(@"%s %@", _cmd, m_result);
+	if(m_debug) {
+		LOG_DEBUG(@"%@", m_result);
+	}
 }
 
 -(void)appendPath {
@@ -408,7 +375,7 @@ uuid_to_name(uuid_t *uu)
 
 	if(m_debug) NSLog(@"is_link");
 	char path[PATH_MAX + 4];
-	int l = readlink(read_path, path, sizeof(path) - 1);
+	ssize_t l = readlink(read_path, path, sizeof(path) - 1);
 	if(l != -1) {
 		path[l] = 0;
 		if(m_debug) NSLog(@"%s", path);
@@ -435,7 +402,7 @@ uuid_to_name(uuid_t *uu)
 
 	error = FSPathMakeRef((const UInt8 *)[m_path fileSystemRepresentation], &ref, NULL);	
 	if(error) {
-		NSLog(@"%s ERROR making FSRef", _cmd);
+		LOG_ERROR(@"ERROR making FSRef");
 		return;
 	}
 	
@@ -445,7 +412,7 @@ uuid_to_name(uuid_t *uu)
 
 	error = FSResolveAliasFileWithMountFlags(&ref, false, &isFolder, &isAlias, kResolveAliasFileNoUI);
 	if(error != noErr) {
-		NSLog(@"%s ERROR occured calling FSResolveAliasFileWithMountFlags", _cmd);
+		LOG_ERROR(@"ERROR occured calling FSResolveAliasFileWithMountFlags");
 		return;
 	}
 	if(!isAlias) {
@@ -455,13 +422,13 @@ uuid_to_name(uuid_t *uu)
 
 	NSURL* target_url = (NSURL *)CFBridgingRelease(CFURLCreateFromFSRef(NULL, &ref));
 	if(target_url == nil) {
-		NSLog(@"%s ERROR occurred creating NSURL from FSRef", _cmd);
+		LOG_ERROR(@"ERROR occurred creating NSURL from FSRef");
 		return;
 	}
 	
 	NSString* target_path = [target_url path];
 	if(target_path == nil) {
-		NSLog(@"%s ERROR occurred creating NSString from NSURL", _cmd);
+		LOG_ERROR(@"ERROR occurred creating NSString from NSURL");
 		return;
 	}
 
@@ -479,10 +446,10 @@ uuid_to_name(uuid_t *uu)
 
 -(void)statDev {	
 	const char* stat_path = [m_path UTF8String];
-	struct stat64 st;
-	int rc = lstat64(stat_path, &st);
+	struct stat st;
+	int rc = lstat(stat_path, &st);
 	if(rc == -1) {
-		NSLog(@"%s ERROR: lstat() rc: %i", _cmd, rc);
+		LOG_ERROR(@"ERROR: lstat() rc: %i", rc);
 		return;
 	}
 	
@@ -505,10 +472,10 @@ uuid_to_name(uuid_t *uu)
 
 -(void)statMode {	
 	const char* stat_path = [m_path UTF8String];
-	struct stat64 st;
-	int rc = lstat64(stat_path, &st);
+	struct stat st;
+	int rc = lstat(stat_path, &st);
 	if(rc == -1) {
-		NSLog(@"%s ERROR: stat() rc: %i", _cmd, rc);
+		LOG_ERROR(@"ERROR: stat() rc: %i", rc);
 		return;
 	}
 
@@ -648,10 +615,10 @@ uuid_to_name(uuid_t *uu)
 
 -(void)statLinks {	
 	const char* stat_path = [m_path UTF8String];
-	struct stat64 st;
-	int rc = lstat64(stat_path, &st);
+	struct stat st;
+	int rc = lstat(stat_path, &st);
 	if(rc == -1) {
-		NSLog(@"%s ERROR: stat() rc: %i", _cmd, rc);
+		LOG_ERROR(@"ERROR: stat() rc: %i", rc);
 		return;
 	}
 
@@ -667,29 +634,29 @@ uuid_to_name(uuid_t *uu)
 
 -(void)statNode {	
 	const char* stat_path = [m_path UTF8String];
-	struct stat64 st;
-	int rc = lstat64(stat_path, &st);
+	struct stat st;
+	int rc = lstat(stat_path, &st);
 	if(rc == -1) {
-		NSLog(@"%s ERROR: stat() rc: %i", _cmd, rc);
+		LOG_ERROR(@"ERROR: stat() rc: %i", rc);
 		return;
 	}
 
-	int inode = st.st_ino;
-	if(m_debug) NSLog(@"File serial number: %i", inode);
+	uint64_t inode = st.st_ino;
+	if(m_debug) NSLog(@"File serial number: %llu", inode);
 
 	if(m_append_to_result) {
 		[self appendText:@"st_ino:   "];
-		[self appendValue:[NSString stringWithFormat:@"%i", inode]];
+		[self appendValue:[NSString stringWithFormat:@"%llu", inode]];
 		[self appendText:@"  file serial number\n"];
 	}
 }
 
 -(void)statUser {
 	const char* stat_path = [m_path UTF8String];
-	struct stat64 st;
-	int rc = lstat64(stat_path, &st);
+	struct stat st;
+	int rc = lstat(stat_path, &st);
 	if(rc == -1) {
-		NSLog(@"%s ERROR: stat() rc: %i", _cmd, rc);
+		LOG_ERROR(@"ERROR: stat() rc: %i", rc);
 		return;
 	}
 
@@ -728,10 +695,10 @@ uuid_to_name(uuid_t *uu)
 
 -(void)statGroup {
 	const char* stat_path = [m_path UTF8String];
-	struct stat64 st;
-	int rc = lstat64(stat_path, &st);
+	struct stat st;
+	int rc = lstat(stat_path, &st);
 	if(rc == -1) {
-		NSLog(@"%s ERROR: stat() rc: %i", _cmd, rc);
+		LOG_ERROR(@"ERROR: stat() rc: %i", rc);
 		return;
 	}
 
@@ -759,10 +726,10 @@ uuid_to_name(uuid_t *uu)
 
 -(void)statRDev {	
 	const char* stat_path = [m_path UTF8String];
-	struct stat64 st;
-	int rc = lstat64(stat_path, &st);
+	struct stat st;
+	int rc = lstat(stat_path, &st);
 	if(rc == -1) {
-		NSLog(@"%s ERROR: stat() rc: %i", _cmd, rc);
+		LOG_ERROR(@"ERROR: stat() rc: %i", rc);
 		return;
 	}
 	
@@ -780,10 +747,10 @@ uuid_to_name(uuid_t *uu)
 
 -(void)statTime {
 	const char* stat_path = [m_path UTF8String];
-	struct stat64 st;
-	int rc = lstat64(stat_path, &st);
+	struct stat st;
+	int rc = lstat(stat_path, &st);
 	if(rc == -1) {
-		NSLog(@"%s ERROR: stat() rc: %i", _cmd, rc);
+		LOG_ERROR(@"ERROR: stat() rc: %i", rc);
 		return;
 	}
 
@@ -859,10 +826,10 @@ uuid_to_name(uuid_t *uu)
 
 -(void)statSizeAndStuff {
 	const char* stat_path = [m_path UTF8String];
-	struct stat64 st;
-	int rc = lstat64(stat_path, &st);
+	struct stat st;
+	int rc = lstat(stat_path, &st);
 	if(rc == -1) {
-		NSLog(@"%s ERROR: stat() rc: %i", _cmd, rc);
+		LOG_ERROR(@"ERROR: stat() rc: %i", rc);
 		return;
 	}
 
@@ -900,7 +867,7 @@ uuid_to_name(uuid_t *uu)
 		}
 	}
 	{
-		int v = st.st_blocks;
+		int v = (int)st.st_blocks;
 		if(m_debug) NSLog(@"blocks: %i  blocks allocated for file", v);
 
 		if(m_append_to_result) {
@@ -1062,7 +1029,7 @@ uuid_to_name(uuid_t *uu)
 	struct FInfo theInfo;
 	BOOL ok = [self finderInfo:&theInfo];
 	if(!ok) {
-		if(m_debug) NSLog(@"%s - no finder info", _cmd);
+		if(m_debug) LOG_DEBUG(@"no finder info");
 
 		[self appendText:@"none\n"];
 		return;
@@ -1075,9 +1042,9 @@ uuid_to_name(uuid_t *uu)
 	int point_h = theInfo.fdLocation.h;
 	int v_fdfldr = theInfo.fdFldr;
 	
-	if(m_debug) NSLog(@"finder flags: %08x", _cmd, v_flags);
-	if(m_debug) NSLog(@"finder location: %i %i", _cmd, point_v, point_h);
-	if(m_debug) NSLog(@"finder fdfldr: %08x", _cmd, v_fdfldr);
+	if(m_debug) LOG_DEBUG(@"finder flags: %08x", v_flags);
+	if(m_debug) LOG_DEBUG(@"finder location: %i %i", point_v, point_h);
+	if(m_debug) LOG_DEBUG(@"finder fdfldr: %08x", v_fdfldr);
 
 	const char* names[] = {
 		"kIsOnDesk",
@@ -1114,7 +1081,7 @@ uuid_to_name(uuid_t *uu)
 		v & kIsInvisible,
 		v & kIsAlias
 	};
-	const int number_of_states = sizeof(states) / sizeof(int);
+	//const int number_of_states = sizeof(states) / sizeof(int);
 	
 	//STATIC_CHECK(number_of_states == number_of_names);
 
@@ -1229,7 +1196,7 @@ TODO: obtain it all!
 
 	ssize_t buffer_size = listxattr(filename, NULL, 0, XATTR_NOFOLLOW);
 	if(buffer_size <= 0) {
-		if(m_debug) NSLog(@"%s no xattr found", _cmd);
+		if(m_debug) LOG_ERROR(@"no xattr found");
 		[self appendText:@"none\n"];
 		return;
 	}
@@ -1238,15 +1205,15 @@ TODO: obtain it all!
 
 	size_t bytes_read = listxattr(filename, buffer, buffer_size, XATTR_NOFOLLOW);
 	if(bytes_read != buffer_size) {
-		NSLog(@"%s mismatch in buffer size", _cmd);
+		LOG_ERROR(@"mismatch in buffer size");
 	}
 
-	if(m_debug) NSLog(@"%s bytes_read: %i", _cmd, (int)bytes_read);
+	if(m_debug) LOG_DEBUG(@"bytes_read: %i", (int)bytes_read);
 
 	int index = 0;
 	char *name = buffer;
 	for(; name < buffer+buffer_size; name += strlen(name) + 1, index++) {
-		int size = getxattr(filename, name, 0, 0, 0, XATTR_NOFOLLOW);
+		ssize_t size = getxattr(filename, name, 0, 0, 0, XATTR_NOFOLLOW);
 		
 		if(m_debug) NSLog(@"row: %i  size: %i  name: %s", index, (int)size, name);
 
@@ -1261,9 +1228,9 @@ TODO: obtain it all!
 		
 		if(size > 0) {
 			char* buf2 = (char*)malloc(size+1);
-			int size2 = getxattr(filename, name, buf2, size, 0, XATTR_NOFOLLOW);
+			ssize_t size2 = getxattr(filename, name, buf2, size, 0, XATTR_NOFOLLOW);
 			if(size != size2) {
-				NSLog(@"%s second size mismatch", _cmd);
+				LOG_ERROR(@"second size mismatch");
 			}
 			
 			buf2[size] = 0;
@@ -1289,7 +1256,7 @@ TODO: obtain it all!
 	BOOL isdir = NO;
 	BOOL ok = [fm fileExistsAtPath:m_path isDirectory:&isdir];
 	if(ok == NO) {
-		NSLog(@"%s ERROR: we can't determine if this is a dir: %@", _cmd, m_path);
+		LOG_ERROR(@"ERROR: we can't determine if this is a dir: %@", m_path);
 	}
 
 
@@ -1299,20 +1266,20 @@ TODO: obtain it all!
 	if (acl && acl_get_entry(acl, ACL_FIRST_ENTRY, &dummy) == -1) {
 		acl_free(acl);
 		acl = NULL;
-		if(m_debug) NSLog(@"%s NO ACL", _cmd);
+		if(m_debug) LOG_ERROR(@"NO ACL");
 
 		[self appendText:@"none\n"];
 		return;
 	}
 
 	if(acl == NULL) {
-		if(m_debug) NSLog(@"%s ACL is NULL", _cmd);
+		if(m_debug) LOG_ERROR(@"ACL is NULL");
 
 		[self appendText:@"none\n"];
 		return;
 	}
 
-	if(m_debug) NSLog(@"%s we have ACL", _cmd);
+	if(m_debug) LOG_DEBUG(@"we have ACL");
 
 	acl_entry_t	entry = NULL;
 	int		index;
@@ -1436,10 +1403,10 @@ TODO: obtain it all!
 			printf("\n");
 		}
 		
-     	if(m_debug) NSLog(@"%s index: %i", _cmd, index);
+     	if(m_debug) LOG_DEBUG(@"index: %i", index);
 	}
 	
-	if(m_debug) NSLog(@"%s done", _cmd);
+	if(m_debug) LOG_DEBUG(@"done");
 
 	acl_free(acl);
 }
