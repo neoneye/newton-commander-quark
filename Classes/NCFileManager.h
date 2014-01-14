@@ -59,12 +59,13 @@ wrapper for strerror_r
 
 -(NSDictionary*)attributesOfItemAtPath:(NSString*)path error:(NSError**)error;
 
-
-/*
-alias_type = 0  means that the alias points to a FILE
-alias_type = 1  means that the alias points to a DIR
-*/
--(NSString*)resolveAlias:(NSString*)path_alias mode:(int*)alias_type;
+/**
+ Lookup the target URL that an alias points to
+ @param anURL  A file path URL, such as file:///Users/johndoe/Desktop/myalias
+ @return A file reference URL, such as file:///.file/id=6571367.30393253/
+ From this file reference URL you must invoke -filePathURL in order to the the actual target URL
+ */
+-(NSURL*)fileReferenceURLFromAlias:(NSURL*)anURL;
 
 
 -(NSString*)resolvePath:(NSString*)path;

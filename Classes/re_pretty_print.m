@@ -21,6 +21,7 @@ TODO: obtain more info using getattrlist()
 
 *********************************************************************/
 #import "re_pretty_print.h"
+#import "NCFileManager.h"
 
 #include <sys/acl.h>
 #include <sys/attr.h>
@@ -395,35 +396,8 @@ uuid_to_name(uuid_t *uu)
 	}
 }
 
-/**
- Lookup the target URL that an alias points to
- @param anURL  A file path URL, such as file:///Users/johndoe/Desktop/myalias
- @return A file reference URL, such as file:///.file/id=6571367.30393253/
-         From this file reference URL you must invoke -filePathURL in order to the the actual target URL
- */
-- (NSURL*)fileReferenceURLFromAlias:(NSURL*)anURL {
-	NSParameterAssert(anURL);
-	NSURL *url = [anURL URLByResolvingSymlinksInPath];
-	NSNumber *isAliasFile = nil;
-	BOOL success = [url getResourceValue:&isAliasFile forKey:NSURLIsAliasFileKey error:NULL];
-	if (success && [isAliasFile boolValue]) {
-		NSData* bookmarkData = [NSURL bookmarkDataWithContentsOfURL:url error:NULL];
-		if (bookmarkData) {
-			NSURL *resolvedURL = [NSURL URLByResolvingBookmarkData:bookmarkData
-														   options:NSURLBookmarkResolutionWithoutUI
-													 relativeToURL:nil
-											   bookmarkDataIsStale:NULL
-															 error:NULL];
-			if (resolvedURL) {
-				return resolvedURL;
-			}
-		}
-	}
-	return nil;
-}
-
 -(void)dumpAlias {
-	NSURL *fileReferenceURL = [self fileReferenceURLFromAlias:[NSURL fileURLWithPath:m_path]];
+	NSURL *fileReferenceURL = [[NCFileManager shared] fileReferenceURLFromAlias:[NSURL fileURLWithPath:m_path]];
 	if (fileReferenceURL) {
 		NSURL *url = [fileReferenceURL filePathURL];
 		[self appendText:@"alias file reference: "];

@@ -66,7 +66,7 @@ typedef struct {
 // same as stat.st_mtimespec, but without the problem where dates before 1970 couldn't be seen.
 // here the dates go all the way back to 1900.
 // however there is another problem.. the code hangs when the path is set to "/Volumes"
-NSDate* xget_contentmodtime(const char* path) {
+/*NSDate* xget_contentmodtime(const char* path) {
 	FSRef ref;
 	Boolean is_directory;
 	if(FSPathMakeRef((UInt8*)path, &ref, &is_directory) != noErr) {
@@ -81,7 +81,7 @@ NSDate* xget_contentmodtime(const char* path) {
 	CFAbsoluteTime abs_time = 0;
 	UCConvertUTCDateTimeToCFAbsoluteTime( &catinfo.contentModDate, &abs_time );
 	return [NSDate dateWithTimeIntervalSinceReferenceDate: abs_time];
-}
+}*/
 
 
 // same as stat.st_mtimespec with the same problem that dates before 1970 cannot be seen
@@ -364,52 +364,37 @@ NSDate* get_backupdate(const char* path) {
 
 #pragma mark -
 
-
--(NSString*)resolveAlias:(NSString*)path_alias mode:(int*)alias_type {
-	// TODO: resolveAlias needs NSError handling
-	FSRef ref;
-	OSStatus error = 0;
-
-	error = FSPathMakeRef((const UInt8 *)[path_alias fileSystemRepresentation], &ref, NULL);	
-	if(error) {
-		// NSLog(@"%s ERROR making FSRef", _cmd);
-		return nil;
+/**
+ Lookup the target URL that an alias points to
+ @param anURL  A file path URL, such as file:///Users/johndoe/Desktop/myalias
+ @return A file reference URL, such as file:///.file/id=6571367.30393253/
+ From this file reference URL you must invoke -filePathURL in order to the the actual target URL
+ */
+-(NSURL*)fileReferenceURLFromAlias:(NSURL*)anURL {
+	NSParameterAssert(anURL);
+	NSURL *url = [anURL URLByResolvingSymlinksInPath];
+	NSNumber *isAliasFile = nil;
+	BOOL success = [url getResourceValue:&isAliasFile forKey:NSURLIsAliasFileKey error:NULL];
+	if (success && [isAliasFile boolValue]) {
+		NSData* bookmarkData = [NSURL bookmarkDataWithContentsOfURL:url error:NULL];
+		if (bookmarkData) {
+			NSURL *resolvedURL = [NSURL URLByResolvingBookmarkData:bookmarkData
+														   options:NSURLBookmarkResolutionWithoutUI
+													 relativeToURL:nil
+											   bookmarkDataIsStale:NULL
+															 error:NULL];
+			if (resolvedURL) {
+				return resolvedURL;
+			}
+		}
 	}
+	return nil;
+}
 
-
-	Boolean is_alias;
-	Boolean is_folder;
-
-	error = FSResolveAliasFileWithMountFlags(&ref, false, &is_folder, &is_alias, kResolveAliasFileNoUI);
-	if(error != noErr) {
-		// NSLog(@"%s ERROR occured calling FSResolveAliasFileWithMountFlags", _cmd);
-		return nil;
-	}
-	if(!is_alias) {
-		// this is not an alias file, so we don't output anything
-		return nil;
-	}
-
-	CFURLRef target_cfurl = CFURLCreateFromFSRef(NULL, &ref);
-	if (!target_cfurl) {
-		// NSLog(@"%s ERROR occurred creating NSURL from FSRef", _cmd);
-		return nil;
-	}
-	NSURL* target_url = (__bridge NSURL *)target_cfurl;
-	CFBridgingRelease(target_cfurl);
-	target_cfurl = NULL;
-
-	NSString* target_path = [target_url path];
-	if(target_path == nil) {
-		// NSLog(@"%s ERROR occurred creating NSString from NSURL", _cmd);
-		return nil;
-	}
-	
-	if(alias_type) {
-		*alias_type = (is_folder ? 1 : 0);
-	}
-
-	return target_path;
+-(NSString*)resolveAlias:(NSString*)path_alias {
+	NSURL *fileReferenceURL = [self fileReferenceURLFromAlias:[NSURL fileURLWithPath:path_alias]];
+	NSURL *url = [fileReferenceURL filePathURL];
+	return [url path];
 }
 
 -(NSString*)resolvePath:(NSString*)the_path {
@@ -485,8 +470,7 @@ NSDate* get_backupdate(const char* path) {
 
 		if(S_ISREG(st.st_mode)) {
 			// this is a file, so we determine if it's an alias file
-			// NSString* target = [path nc_stringByResolvingAliasMode:NULL];
-			NSString* target = [self resolveAlias:path mode:NULL];
+			NSString* target = [self resolveAlias:path];
 			if(!target) {
 				NSLog(@"alias didn't return a string: '%@'", path);
 				continue;
