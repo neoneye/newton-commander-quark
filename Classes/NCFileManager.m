@@ -391,8 +391,9 @@ NSDate* get_backupdate(const char* path) {
 	return nil;
 }
 
--(NSString*)resolveAlias:(NSString*)path_alias {
-	NSURL *fileReferenceURL = [self fileReferenceURLFromAlias:[NSURL fileURLWithPath:path_alias]];
+-(NSString*)resolveAlias:(NSString*)pathAlias {
+	NSParameterAssert(pathAlias);
+	NSURL *fileReferenceURL = [self fileReferenceURLFromAlias:[NSURL fileURLWithPath:pathAlias]];
 	NSURL *url = [fileReferenceURL filePathURL];
 	return [url path];
 }

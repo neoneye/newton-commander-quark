@@ -67,6 +67,7 @@ wrapper for strerror_r
  */
 -(NSURL*)fileReferenceURLFromAlias:(NSURL*)anURL;
 
+-(NSString*)resolveAlias:(NSString*)pathAlias;
 
 -(NSString*)resolvePath:(NSString*)path;
 
