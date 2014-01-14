@@ -1,5 +1,5 @@
 /*********************************************************************
-re_pretty_print.mm - obtain detailed info about a file/dir/...
+NCInspectFile.m - obtain detailed info about a file/dir/...
 
 Copyright (c) 2009 - opcoders.com
 Simon Strandgaard <simon@opcoders.com>
@@ -20,7 +20,7 @@ that I have no clue how to obtain.
 TODO: obtain more info using getattrlist()
 
 *********************************************************************/
-#import "re_pretty_print.h"
+#import "NCInspectFile.h"
 #import "NCFileManager.h"
 
 #include <sys/acl.h>
@@ -151,7 +151,7 @@ uuid_to_name(uuid_t *uu)
 }
 
 
-@interface REPrettyPrint () {
+@interface NCInspectFile () {
 	NSString* m_path;
 	NSMutableAttributedString* m_result;
 	BOOL m_append_to_result;
@@ -169,7 +169,7 @@ uuid_to_name(uuid_t *uu)
 
 @end
 
-@implementation REPrettyPrint
+@implementation NCInspectFile
 
 -(id)initWithPath:(NSString*)path {
 	self = [super init];

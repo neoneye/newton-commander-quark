@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#include "re_pretty_print.h"
+#import "NCInspectFile.h"
 
 @implementation AppDelegate
 
@@ -42,7 +42,7 @@
 
 	NSTextView *tv = theTextView;
 	
-	REPrettyPrint *pp = [[REPrettyPrint alloc] initWithPath:[@"~/Desktop" stringByExpandingTildeInPath]];
+	NCInspectFile *pp = [[NCInspectFile alloc] initWithPath:[@"~/Desktop" stringByExpandingTildeInPath]];
 	[pp obtain];
 	NSAttributedString *s = [pp result];
 	
