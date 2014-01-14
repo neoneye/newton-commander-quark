@@ -282,7 +282,6 @@ uuid_to_name(uuid_t *uu)
 	if(m_debug_sections) { NSLog(@"section: readlink"); }
 	[self dumpReadlink];
 	[self dumpAlias];
-	[self dumpAlias1];
 
 	/*
 	dump the stat struct
@@ -396,125 +395,46 @@ uuid_to_name(uuid_t *uu)
 	}
 }
 
--(void)dumpAlias1 {
-	Boolean notFound=YES;
-
-	const char *cpath = [m_path fileSystemRepresentation];
-	
-	
-	size_t slen, max_path = (size_t) pathconf(".",_PC_PATH_MAX) ;
-	if ((slen = strlen(cpath)) >= max_path) {
-		LOG_ERROR(@"path is too long");
-		return;
-	}
-	char *orig_path=CFAllocatorAllocate(CFAllocatorGetDefault(), slen+1, 0);
-	orig_path=strcpy(orig_path, cpath);
-	
-	CFStringRef pstr = CFStringCreateWithCStringNoCopy(NULL, orig_path,
-													   kCFStringEncodingUTF8, kCFAllocatorNull);
-	
-	CFURLRef url = CFURLCreateWithFileSystemPath( kCFAllocatorDefault,
-												 (CFStringRef)pstr,
-												 kCFURLPOSIXPathStyle, FALSE);
-	if (url != NULL) {
-		CFBooleanRef isalias=kCFBooleanFalse ;
-		CFErrorRef err=noErr ;
-		if ( CFURLCopyResourcePropertyForKey ( url,kCFURLIsAliasFileKey , &isalias, &err)) {
-			
-			if (isalias == kCFBooleanTrue && err == noErr) {
-				
-				Boolean isStale=NO;
-				CFDataRef bkMrk = CFURLCreateBookmarkDataFromFile(kCFAllocatorDefault , url, &err );
-				
-				CFURLRef resolvedUrl = NULL ;
-				if ( err == noErr ) {
-					resolvedUrl =CFURLCreateByResolvingBookmarkData(kCFAllocatorDefault, bkMrk,
-																	(CFURLBookmarkResolutionOptions)0, NULL, NULL, &isStale, &err) ;
-				}
-				
-				if (resolvedUrl) {
-					NSURL* url = (__bridge NSURL *)resolvedUrl;
-
-					[self appendText:@"alias: "];
-					[self appendValue:[NSString stringWithFormat:@"%@", url]];
-					[self appendText:@"\n"];
-				}
-				
-				CFRelease(bkMrk) ;
-				if (err == noErr && isalias == kCFBooleanTrue && resolvedUrl != NULL ) {
-					
-					if (isStale == YES )
-						goto cleanup ;
-					else if (resolvedUrl != NULL) {
-						uint8_t *buf = calloc(max_path+1,1) ;
-						Boolean oktrans =CFURLGetFileSystemRepresentation(resolvedUrl, YES, buf,max_path) ;
-						
-						if (oktrans ) {
-							fprintf(stdout,"%s\n",(char *)buf) ;
-							notFound=NO;
-							free(buf) ;
-						} 
-						CFRelease(resolvedUrl);
-					}
-				}
-				CFRelease(url);
+/**
+ Lookup the target URL that an alias points to
+ @param anURL  A file path URL, such as file:///Users/johndoe/Desktop/myalias
+ @return A file reference URL, such as file:///.file/id=6571367.30393253/
+         From this file reference URL you must invoke -filePathURL in order to the the actual target URL
+ */
+- (NSURL*)fileReferenceURLFromAlias:(NSURL*)anURL {
+	NSParameterAssert(anURL);
+	NSURL *url = [anURL URLByResolvingSymlinksInPath];
+	NSNumber *isAliasFile = nil;
+	BOOL success = [url getResourceValue:&isAliasFile forKey:NSURLIsAliasFileKey error:NULL];
+	if (success && [isAliasFile boolValue]) {
+		NSData* bookmarkData = [NSURL bookmarkDataWithContentsOfURL:url error:NULL];
+		if (bookmarkData) {
+			NSURL *resolvedURL = [NSURL URLByResolvingBookmarkData:bookmarkData
+														   options:NSURLBookmarkResolutionWithoutUI
+													 relativeToURL:nil
+											   bookmarkDataIsStale:NULL
+															 error:NULL];
+			if (resolvedURL) {
+				return resolvedURL;
 			}
 		}
-	} 
-cleanup:
-	CFRelease(pstr) ;
+	}
+	return nil;
 }
-
 
 -(void)dumpAlias {
-
-	FSRef ref;
-	OSStatus error = 0;
-
-	error = FSPathMakeRef((const UInt8 *)[m_path fileSystemRepresentation], &ref, NULL);	
-	if(error) {
-		LOG_ERROR(@"ERROR making FSRef");
-		return;
+	NSURL *fileReferenceURL = [self fileReferenceURLFromAlias:[NSURL fileURLWithPath:m_path]];
+	if (fileReferenceURL) {
+		NSURL *url = [fileReferenceURL filePathURL];
+		[self appendText:@"alias file reference: "];
+		[self appendValue:[NSString stringWithFormat:@"%@", fileReferenceURL]];
+		[self appendText:@"\nalias file path: "];
+		[self appendValue:[NSString stringWithFormat:@"%@", url]];
+		[self appendText:@"\n"];
 	}
-	
-
-	Boolean isAlias;
-	Boolean isFolder;
-
-	error = FSResolveAliasFileWithMountFlags(&ref, false, &isFolder, &isAlias, kResolveAliasFileNoUI);
-	if(error != noErr) {
-		LOG_ERROR(@"ERROR occured calling FSResolveAliasFileWithMountFlags");
-		return;
-	}
-	if(!isAlias) {
-		// this is not an alias file, so we don't output anything
-		return;
-	}
-
-	NSURL* target_url = (NSURL *)CFBridgingRelease(CFURLCreateFromFSRef(NULL, &ref));
-	if(target_url == nil) {
-		LOG_ERROR(@"ERROR occurred creating NSURL from FSRef");
-		return;
-	}
-	
-	NSString* target_path = [target_url path];
-	if(target_path == nil) {
-		LOG_ERROR(@"ERROR occurred creating NSString from NSURL");
-		return;
-	}
-
-	[self appendText:@"alias: "];
-	if(isFolder) {
-		[self appendValue:@"folder"];
-	} else {
-		[self appendValue:@"file"];
-	}
-	[self appendText:@" refers to "];
-	[self appendValue:target_path];
-	[self appendText:@"\n"];
 }
 
--(void)statDev {	
+-(void)statDev {
 	const char* stat_path = [m_path UTF8String];
 	struct stat st;
 	int rc = lstat(stat_path, &st);
